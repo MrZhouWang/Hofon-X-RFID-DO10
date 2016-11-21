@@ -1,0 +1,4 @@
+10:35:48.678
+XConverter 已停止，端口：COM3。
+11:53:16.155
+XConverter 已停止，端口：COM3。

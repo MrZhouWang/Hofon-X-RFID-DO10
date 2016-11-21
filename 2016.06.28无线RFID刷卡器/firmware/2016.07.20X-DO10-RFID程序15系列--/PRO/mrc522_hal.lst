@@ -1,0 +1,122 @@
+C51 COMPILER V9.52.0.0   MRC522_HAL                                                        08/17/2016 10:12:56 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MRC522_HAL
+OBJECT MODULE PLACED IN ..\OUT\mrc522_hal.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\mrc522_hal.c LARGE OMF2 BROWSE INCDIR(..\INC;..\PRO;..
+                    -\SRC) DEBUG PRINT(.\mrc522_hal.lst) TABS(2) OBJECT(..\OUT\mrc522_hal.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          ////////////////////////////////////////////////////////////////////////////////
+   3          // 功能描述 : 写RC522寄存器
+   4          // 输入参数 : 
+   5          // 返回参数 : 
+   6          // 说明     : Address[IN]:寄存器地址   value[IN]:写入的值          
+   7          ////////////////////////////////////////////////////////////////////////////////
+   8          void WriteRawRC(unsigned char Address, unsigned char value)
+   9          {  
+  10   1          unsigned char i, ucAddr;
+  11   1      
+  12   1          MF522_SCK = 0;
+  13   1          MF522_SDA = 0;
+  14   1          ucAddr = ((Address<<1)&0x7E);
+  15   1      
+  16   1          for(i=8;i>0;i--)
+  17   1          {
+  18   2              MF522_MOSI = ((ucAddr&0x80)==0x80);
+  19   2              MF522_SCK = 1;
+  20   2              ucAddr <<= 1;
+  21   2              MF522_SCK = 0;
+  22   2          }
+  23   1      
+  24   1          for(i=8;i>0;i--)
+  25   1          {
+  26   2              MF522_MOSI = ((value&0x80)==0x80);
+  27   2              MF522_SCK = 1;
+  28   2              value <<= 1;
+  29   2              MF522_SCK = 0;
+  30   2          }
+  31   1          MF522_SDA = 1;
+  32   1          MF522_SCK = 1;
+  33   1      }
+  34          ////////////////////////////////////////////////////////////////////////////////
+  35          // 功能描述 : 读RC522寄存器
+  36          // 输入参数 : 
+  37          // 返回参数 : 读出的值
+  38          // 说明     : Address[IN]:寄存器地址         
+  39          ////////////////////////////////////////////////////////////////////////////////
+  40          unsigned char ReadRawRC(unsigned char Address)
+  41          {
+  42   1           unsigned char i, ucAddr;
+  43   1           unsigned char ucResult=0;
+  44   1      
+  45   1           MF522_SCK = 0;
+  46   1           MF522_SDA = 0;
+  47   1           ucAddr = ((Address<<1)&0x7E)|0x80;
+  48   1      
+  49   1           for(i=8;i>0;i--)
+  50   1           {
+  51   2               MF522_MOSI = ((ucAddr&0x80)==0x80);
+  52   2               MF522_SCK = 1;
+  53   2               ucAddr <<= 1;
+  54   2               MF522_SCK = 0;
+C51 COMPILER V9.52.0.0   MRC522_HAL                                                        08/17/2016 10:12:56 PAGE 2   
+
+  55   2           }
+  56   1      
+  57   1           for(i=8;i>0;i--)
+  58   1           {
+  59   2               MF522_SCK = 1;
+  60   2               ucResult <<= 1;
+  61   2               ucResult|=(bit)MF522_MISO;
+  62   2               MF522_SCK = 0;
+  63   2           }
+  64   1      
+  65   1           MF522_SDA = 1;
+  66   1           MF522_SCK = 1;
+  67   1           return ucResult;
+  68   1      }
+  69          ////////////////////////////////////////////////////////////////////////////////
+  70          // 功能描述 : 置RC522寄存器位
+  71          // 输入参数 : 
+  72          // 返回参数 : 
+  73          // 说明     : reg[IN]:寄存器地址        mask[IN]:置位值       
+  74          ////////////////////////////////////////////////////////////////////////////////
+  75          void SetBitMask(unsigned char reg,unsigned char mask)  
+  76          {
+  77   1          char tmp = 0x0;
+  78   1          tmp = ReadRawRC(reg);
+  79   1          WriteRawRC(reg,tmp | mask);  // set bit mask
+  80   1      }
+  81          ////////////////////////////////////////////////////////////////////////////////
+  82          // 功能描述 : 清RC522寄存器位
+  83          // 输入参数 : 
+  84          // 返回参数 : 
+  85          // 说明     : reg[IN]:寄存器地址     mask[IN]:清位值       
+  86          ////////////////////////////////////////////////////////////////////////////////
+  87          void ClearBitMask(unsigned char reg,unsigned char mask)  
+  88          {
+  89   1          char tmp = 0x0;
+  90   1          tmp = ReadRawRC(reg);
+  91   1          WriteRawRC(reg, tmp & ~mask);  // clear bit mask
+  92   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    147    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

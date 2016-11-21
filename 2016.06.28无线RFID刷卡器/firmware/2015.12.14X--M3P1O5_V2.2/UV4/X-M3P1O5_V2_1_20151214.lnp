@@ -1,0 +1,8 @@
+".\eeprom.obj",
+".\led.obj",
+".\main.obj",
+".\uart.obj",
+".\process.obj",
+".\key.obj" 
+TO "X-M3P1O5_V2_1_20151214" 
+RAMSIZE(256) 

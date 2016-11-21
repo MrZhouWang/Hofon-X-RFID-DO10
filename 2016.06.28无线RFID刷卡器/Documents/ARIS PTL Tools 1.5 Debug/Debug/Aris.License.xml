@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aris.License</name>
+    </assembly>
+    <members>
+        <member name="T:Aris.License.ILicenseInfoProvider">
+            <summary>
+            授权信息提供程序。
+            </summary>
+        </member>
+        <member name="M:Aris.License.ILicenseInfoProvider.Get">
+            <summary>
+            获取授权信息。
+            </summary>
+            <returns>授权信息。</returns>
+        </member>
+        <member name="M:Aris.License.ILicenseInfoProvider.Reactivate(System.String)">
+            <summary>
+            使用指定的授权文件尝试激活。
+            </summary>
+            <param name="licenseFile">授权文件。</param>
+            <returns>激活结果。</returns>
+        </member>
+        <member name="M:Aris.License.ILicenseInfoProvider.GetHardwareId(System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            获取机器码。
+            </summary>
+            <param name="board">是否包含主板。</param>
+            <param name="cpu">是否包含 CPU。</param>
+            <param name="hdd">是否包含硬盘。</param>
+            <param name="mac">是否包含网卡。</param>
+            <returns>机器码。</returns>
+        </member>
+        <member name="T:Aris.License.LicenseInfo">
+            <summary>
+            授权信息。
+            </summary>
+        </member>
+        <member name="M:Aris.License.LicenseInfo.#ctor">
+            <summary>
+            初始化授权信息。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.Licensed">
+            <summary>
+            获取或设置是否已授权。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.License">
+            <summary>
+            获取或设置授权文件的内容。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.KeyValueList">
+            <summary>
+            获取附加的授权描述信息集。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.EvaluationLockEnabled">
+            <summary>
+            获取或设置是否启用试用期。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.EvaluationTypeIsDays">
+            <summary>
+            获取或设置试用期是否是日期，否则为程序运行时间。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.EvaluationTime">
+            <summary>
+            获取或设置总试用时间，天数或运行时间。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.EvaluationTimeCurrent">
+            <summary>
+            获取或设置当前已试用时间。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.ExpirationDateLockEnable">
+            <summary>
+            获取或设置是否启用绝对过期时间。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.ExpirationDate">
+            <summary>
+            获取或设置绝对过期时间。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.NumberOfUsesLockEnable">
+            <summary>
+            获取或设置是否启用使用次数限制。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.NumberOfUses">
+            <summary>
+            获取或设置总的可使用次数。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.NumberOfUsesCurrent">
+            <summary>
+            获取或设置当前已使用的次数。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.NumberOfInstancesLockEnable">
+            <summary>
+            获取或设置是否启用实例数限制。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.NumberOfInstances">
+            <summary>
+            获取或设置总的可运行实例数。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.HardwareLockEnabled">
+            <summary>
+            获取或设置是否启用机器码验证。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.HardwareId">
+            <summary>
+            获取或设置当前机器码。
+            </summary>
+        </member>
+        <member name="P:Aris.License.LicenseInfo.LicenseHardwareId">
+            <summary>
+            获取或设置被授权的机器码。
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,47 @@
+C51 COMPILER V9.52.0.0   TIMER                                                             08/17/2016 10:12:55 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN ..\OUT\timer.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\timer.c LARGE OMF2 BROWSE INCDIR(..\INC;..\PRO;..\SRC)
+                    - DEBUG PRINT(.\timer.lst) TABS(2) OBJECT(..\OUT\timer.obj)
+
+line level    source
+
+   1          #define TIMER_GLOBAL
+   2          #include "include.h"
+   3          ////////////////////////////////////////////////////////////////////////////////
+   4          // 功能描述 : 定时器初始化
+   5          // 输入参数 : 
+   6          // 返回参数 : 
+   7          // 说明     :  
+   8          ////////////////////////////////////////////////////////////////////////////////
+   9          void InitT0(void)
+  10          {
+  11   1        AUXR &= 0x7F;   //定时器时钟12T模式
+  12   1        TMOD &= 0xF0;   //设置定时器模式
+  13   1        TMOD |= 0x01;   //设置定时器模式
+  14   1        TL0 = 0x66;   //设置定时初值
+  15   1        TH0 = 0xFC;   //设置定时初值
+  16   1        TF0 = 0;    //清除TF0标志
+  17   1        TR0 = 1;    //定时器0开始计时
+  18   1        ET0  = 1;                       //allow interrupt
+  19   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     22    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

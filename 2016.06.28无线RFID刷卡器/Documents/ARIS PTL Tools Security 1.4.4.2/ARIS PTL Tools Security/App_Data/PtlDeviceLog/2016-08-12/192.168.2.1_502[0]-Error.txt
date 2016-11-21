@@ -1,0 +1,4 @@
+08:37:49.812
+System.Net.Sockets.SocketException: 在其上下文中，该请求的地址无效。 192.168.2.1:502
+   在 System.Net.Sockets.Socket.EndConnect(IAsyncResult asyncResult)
+   在 Ptl.Device.Communication.ModbusClient.aMAvQuUYw9()

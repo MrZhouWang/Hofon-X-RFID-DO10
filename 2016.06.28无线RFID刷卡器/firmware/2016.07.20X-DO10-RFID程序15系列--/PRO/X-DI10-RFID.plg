@@ -1,0 +1,118 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\公司项目\2016.06.28无线RFID刷卡器\firmware\2016.07.07X-DO10-RFID程序\PRO\X-DI10-RFID.uvproj
+Project File Date:  07/07/2016
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling crc.c...
+..\SRC\CRC.C(2): error C129: missing ';' before 'code'
+compiling eeprom.c...
+..\SRC\eeprom.c(1): warning C318: can't open file 'main.h'
+..\SRC\eeprom.c(2): warning C318: can't open file 'eeprom.h'
+..\SRC\eeprom.c(3): warning C318: can't open file 'uart.h'
+..\SRC\eeprom.c(4): warning C318: can't open file 'led.h'
+..\SRC\EEPROM.C(8): error C141: syntax error near 'UINT16'
+..\SRC\EEPROM.C(8): error C129: missing ';' before 'un_temp16'
+compiling key.c...
+..\SRC\key.c(1): warning C318: can't open file 'main.h'
+..\SRC\key.c(2): warning C318: can't open file 'led.h'
+..\SRC\key.c(3): warning C318: can't open file 'key.h'
+..\SRC\key.c(4): warning C318: can't open file 'process.h'
+..\SRC\key.c(5): warning C318: can't open file 'Uart.h'
+..\SRC\key.c(6): warning C318: can't open file 'eeprom.h'
+..\SRC\KEY.C(9): error C129: missing ';' before 'keyStatus'
+compiling led.c...
+..\SRC\led.c(1): warning C318: can't open file 'main.h'
+..\SRC\led.c(2): warning C318: can't open file 'led.h'
+..\SRC\led.c(3): warning C318: can't open file 'key.h'
+..\SRC\led.c(4): warning C318: can't open file 'eeprom.h'
+..\SRC\led.c(5): warning C318: can't open file 'process.h'
+..\SRC\led.c(6): warning C318: can't open file 'uart.h'
+..\SRC\LED.C(9): error C129: missing ';' before 'LightTowerCtl'
+compiling main.c...
+..\SRC\main.c(17): warning C318: can't open file 'main.h'
+..\SRC\main.c(18): warning C318: can't open file 'uart.h'
+..\SRC\main.c(19): warning C318: can't open file 'led.h'
+..\SRC\main.c(20): warning C318: can't open file 'key.h'
+..\SRC\main.c(21): warning C318: can't open file 'process.h'
+..\SRC\main.c(22): warning C318: can't open file 'eeprom.h'
+..\SRC\MAIN.C(24): error C129: missing ';' before 'sys'
+compiling process.c...
+..\SRC\process.c(1): warning C318: can't open file 'main.h'
+..\SRC\process.c(2): warning C318: can't open file 'uart.h'
+..\SRC\process.c(3): warning C318: can't open file 'process.h'
+..\SRC\process.c(4): warning C318: can't open file 'led.h'
+..\SRC\process.c(5): warning C318: can't open file 'key.h'
+..\SRC\process.c(6): warning C318: can't open file 'eeprom.h'
+..\SRC\PROCESS.C(18): error C202: 'UINT8': undefined identifier
+..\SRC\PROCESS.C(18): error C141: syntax error near 'tIndex'
+..\SRC\PROCESS.C(19): error C202: 'UINT8': undefined identifier
+..\SRC\PROCESS.C(19): error C141: syntax error near 'addr'
+..\SRC\PROCESS.C(20): error C202: 'UINT16': undefined identifier
+..\SRC\PROCESS.C(20): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(22): error C202: 'addr': undefined identifier
+..\SRC\PROCESS.C(32): error C202: 'IsOkPressed': undefined identifier
+..\SRC\PROCESS.C(44): error C202: 'tIndex': undefined identifier
+..\SRC\PROCESS.C(60): error C202: 'usCRC': undefined identifier
+..\SRC\PROCESS.C(61): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(65): error C202: 'UINT8': undefined identifier
+..\SRC\PROCESS.C(65): error C141: syntax error near ')'
+..\SRC\PROCESS.C(65): error C141: syntax error near ')'
+..\SRC\PROCESS.C(69): error C141: syntax error near 'addr'
+..\SRC\PROCESS.C(70): error C202: 'UINT16': undefined identifier
+..\SRC\PROCESS.C(70): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(72): error C202: 'addr': undefined identifier
+..\SRC\PROCESS.C(77): error C202: 'usCRC': undefined identifier
+..\SRC\PROCESS.C(78): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(81): error C202: 'UINT8': undefined identifier
+..\SRC\PROCESS.C(81): error C141: syntax error near ')'
+..\SRC\PROCESS.C(81): error C141: syntax error near ')'
+..\SRC\PROCESS.C(90): error C141: syntax error near ')'
+..\SRC\PROCESS.C(90): error C141: syntax error near ')'
+..\SRC\PROCESS.C(99): error C141: syntax error near 'addr'
+..\SRC\PROCESS.C(100): error C202: 'UINT16': undefined identifier
+..\SRC\PROCESS.C(100): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(109): error C202: 'usCRC': undefined identifier
+..\SRC\PROCESS.C(111): error C141: syntax error near 'usCRC'
+..\SRC\PROCESS.C(115): error C202: 'UINT8': undefined identifier
+..\SRC\PROCESS.C(115): error C141: syntax error near ')'
+..\SRC\PROCESS.C(115): error C141: syntax error near ')'
+..\SRC\PROCESS.C(125): error C202: 'beSettingAddr': undefined identifier
+..\SRC\PROCESS.C(127): error C202: 'address': undefined identifier
+..\SRC\PROCESS.C(127): error C202: 'address': undefined identifier
+..\SRC\PROCESS.C(127): error C202: 'address': undefined identifier
+compiling uart.c...
+..\SRC\uart.c(1): warning C318: can't open file 'main.h'
+..\SRC\uart.c(2): warning C318: can't open file 'uart.h'
+..\SRC\uart.c(3): warning C318: can't open file 'led.h'
+..\SRC\CRC.C(2): error C129: missing ';' before 'code'
+..\SRC\uart.c(133): warning C322: unknown identifier
+..\SRC\uart.c(133): warning C322: unknown identifier
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling crc.c...
+..\SRC\CRC.C(2): error C129: missing ';' before 'code'
+compiling eeprom.c...
+compiling key.c...
+compiling led.c...
+compiling main.c...
+compiling process.c...
+compiling uart.c...
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling crc.c...
+..\SRC\CRC.C(2): error C129: missing ';' before 'code'
+compiling eeprom.c...
+compiling key.c...
+compiling led.c...
+compiling main.c...
+compiling process.c...
+compiling uart.c...
+Target not created

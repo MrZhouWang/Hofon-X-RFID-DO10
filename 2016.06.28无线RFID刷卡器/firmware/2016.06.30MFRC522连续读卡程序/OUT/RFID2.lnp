@@ -1,0 +1,6 @@
+"..\OUT\STARTUP.obj",
+"..\OUT\MAIN.obj",
+"..\OUT\RC522.obj" 
+TO "..\OUT\RFID2" 
+
+PRINT(".\RFID2.map")

@@ -1,0 +1,469 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\src\main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTE
+                    -ND PRINT(.\main.lst) TABS(2) OBJECT(.\main.obj)
+
+line level    source
+
+   1          /*=========================================================
+   2          // 程序更改说明
+   3          //  2014年8月6日更改  版本v2.0
+   4          //   1.显示开机版本，显示LED各段方便检测LED好坏。
+   5          //     字库保持原来的基础上把库扩成128的字库，方便以后更改。
+   6          //   2.修正X_M3的F1，F4均显示错误
+   7          //   3.读取DispMod不正确
+   8          
+   9          //  2014年9月22日更改  版本v2.1
+  10          //   1.增加灯模式0=灭，1=红，2=绿，3=蓝，4=红绿，5=红蓝，6=绿蓝，7=红绿蓝
+  11          //     改led_light_ctrl 函数，对应设置上面7种模式
+  12             2015年12月14日更改  版本v2.2
+  13          //   1.main.h文件中MAX_ADDR   99改为     256  20151214 
+  14          =========================================================*/
+  15          
+  16          
+  17          #include "main.h"
+  18          #include "uart.h"
+  19          #include "led.h"
+  20          #include "key.h"
+  21          #include "process.h"
+  22          #include "eeprom.h"
+  23          
+  24          volatile OS_SYS sys;
+  25          
+  26          ///////////////////////////////全局变量/////////////////////////////////////
+  27          volatile UINT8   digital_led_loading = OFF;
+  28          volatile UINT8   digital_led_refresh = OFF;
+  29          volatile UINT16  digital_led_loading_static = 0;
+  30          volatile UINT8   led_static_warn = OFF;//当本标签按下按钮后的信息10秒钟后，
+  31                                                                          //其数据都还没被采集上去，则蓝色闪烁）；
+  32          volatile UINT16   led_static_warn_cnt = 0;
+  33          volatile UINT8 led_flash_switch =OFF;
+  34          
+  35          volatile UINT8 led_flash_NO =LED_RED;         //灯组控制
+  36          volatile UINT16 led_flash_period=1000;          //闪烁周期控制
+  37          volatile UINT8 led_flash_mode =LED_FLASH_MODE_1V1;    //亮灭时间比例控制:0常亮
+  38          volatile UINT8 led_flash_status = 0;          //闪烁控制灯时，灯当前的状态,0——灭；1——亮
+  39          volatile UINT8 led_flash_NO_BK =LED_RED;        //灯组控制备份数据(拉进度条后使用)
+  40          
+  41          //未完成任务块
+  42          volatile UINT8 beSettingAddr = 0;           //0:非设置站址    1:设置站址    2：站址设定已经按下OK键
+  43          volatile UINT8 toSettedAddr[3];             //待设定地址值
+  44          volatile UINT8 task_unupdate_num = 0;             //主机未下传作业任务总数
+  45          volatile UINT8 task_unfinish_num =0;          //未完成任务总数= 0,1...MAX_TASK_NUM
+  46          volatile UINT8 task_unfinish_NO[MAX_TASK_NUM] ={0};   //货位号
+  47          volatile UINT8 task_un_goods_numH[MAX_TASK_NUM] ={0}; //商品数据高位
+  48          volatile UINT8 task_un_goods_numL[MAX_TASK_NUM] ={0}; //商品数据低位
+  49          
+  50          ///已完成任务块
+  51          volatile UINT8 task_finished_num =0;            //已完成任务总数= 0,1...MAX_TASK_NUM
+  52          volatile UINT8 task_finished_NO[MAX_TASK_NUM] ={0};     //货位号
+  53          volatile UINT8 task_ed_goods_numH[MAX_TASK_NUM] ={0}; //商品数据高位
+  54          volatile UINT8 task_ed_goods_numL[MAX_TASK_NUM] ={0}; //商品数据低位
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 2   
+
+  55          
+  56          volatile UINT8 SystemLocked = OFF;            //锁定系统、解锁系统
+  57          
+  58          volatile DisplayInfo DispInfoCur;           //当前显示信息     
+  59          ///////////////////////////////全局变量-END-////////////////////////////////
+  60          // 开机显示版本号
+  61          UINT8 const  code  Version[LED_NUMBER]={'V',0x3C,'2'};     //3A=0.；3B=1.；3C=2.；3D=3.；3E=4.；3F=5.；
+  62          /*******************************************************************************
+  63                      1毫秒延迟函数
+  64          *******************************************************************************/
+  65          void Delay1Ms() 
+  66          {
+  67   1          UINT16 i = 852;
+  68   1          while (i != 0) {i--;}
+  69   1      }
+  70          
+  71          /*******************************************************************************
+  72                      毫秒延迟函数
+  73              input   usDelay     延迟时间值
+  74            output  none
+  75          *******************************************************************************/
+  76          
+  77          void DelayMs(UINT16 usDelay)
+  78          {
+  79   1          for(; usDelay>0; usDelay--)
+  80   1          {
+  81   2              Delay1Ms();
+  82   2          }   
+  83   1      }
+  84          /*******************************************************************************
+  85                        端口初始化
+  86          *******************************************************************************/
+  87          void IO_Init(void)
+  88          {
+  89   1      //  P0M1 = 0x00;
+  90   1      //  P0M0 = 0x0f;
+  91   1      //
+  92   1        P1M1 = 0x00;
+  93   1        P1M0 = 0x80;
+  94   1      
+  95   1        P2M1 = 0x00;
+  96   1        P2M0 = 0x0e;
+  97   1      
+  98   1        P3M1 = 0x00;
+  99   1        P3M0 = 0xc0;
+ 100   1      
+ 101   1        P4SW = 0x70;
+ 102   1      
+ 103   1      //  //先熄灭指示灯
+ 104   1        CNTRL1_OFF;     CNTRL2_OFF;     CNTRL3_OFF;
+ 105   1        CNTRL4_OFF;     CNTRL5_OFF;     CNTRL6_OFF;
+ 106   1      
+ 107   1        LED_CNTRL1_OFF;   LED_CNTRL2_OFF;   LED_CNTRL3_OFF;
+ 108   1        LED_CNTRL4_OFF;   LED_CNTRL5_OFF;   LED_CNTRL6_OFF;
+ 109   1        sys.led_scan_flag = OFF;
+ 110   1      }
+ 111          
+ 112          
+ 113          
+ 114          
+ 115          /***************************************************
+ 116              T0定时器初始化
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 3   
+
+ 117          ***************************************************/
+ 118          #define TH0_INIT        0xf8
+ 119          #define TL0_INIT        0xcc
+ 120          
+ 121          void InitT0(void)
+ 122          {
+ 123   1          //定时1ms//默认为12T模式=>T0_CLK=SYS_CLK/12=11 059 200 /12 =921600      
+ 124   1          TMOD = (TMOD & 0xf0) | 0x01;    //mode 1: 16 bit counter
+ 125   1          TH0  = TH0_INIT;
+ 126   1          TL0  = TL0_INIT;  
+ 127   1      
+ 128   1          ET0  = 1;                       //allow interrupt
+ 129   1          TR0  = 1;                       //open timer0
+ 130   1      
+ 131   1          return;
+ 132   1      }
+ 133          
+ 134          /*******************************************************************************
+ 135            定时器T0中断服务程序(ms中断)                                     
+ 136            Input :   中断向量
+ 137            Output :  sys.flag 置为有效
+ 138          *******************************************************************************/
+ 139          void timer0_int (void) interrupt 1
+ 140          { 
+ 141   1        int index = 0;
+ 142   1      
+ 143   1          TH0  = TH0_INIT;
+ 144   1          TL0  = TL0_INIT;
+ 145   1          
+ 146   1          sys.led_scan_flag  = ON;
+ 147   1          //串口1-485缓冲区有数据
+ 148   1          if (uart.rIndex != 0)       
+ 149   1          {
+ 150   2              if (uart.rTimer-- == 0) 
+ 151   2              {
+ 152   3            uart.rFlag  = ON;
+ 153   3          }
+ 154   2          }
+ 155   1      
+ 156   1          //串口2-232缓冲区有数据
+ 157   1          if (uart232.rIndex != 0)        
+ 158   1          {
+ 159   2          if (uart232.rTimer-- == 0) 
+ 160   2          {
+ 161   3            uart232.rFlag  = ON;
+ 162   3            digital_led_refresh = ON;
+ 163   3          }
+ 164   2          }    
+ 165   1          //递减计算器，自减1
+ 166   1          if (sys.led_flash_count != 0)
+ 167   1              sys.led_flash_count--;
+ 168   1        for(index = 0; index < 6; index++)
+ 169   1        {
+ 170   2          if(LightTowerCtl[index].led_flash_count != 0)
+ 171   2            LightTowerCtl[index].led_flash_count--;
+ 172   2        }
+ 173   1          //挨个扫描数码管
+ 174   1          led_Scan();
+ 175   1      }
+ 176          /*******************************************************************************
+ 177                    数码管显示控制
+ 178            input:   
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 4   
+
+ 179            output:  none         
+ 180          *******************************************************************************/
+ 181          void digital_led_disp(void)
+ 182          {
+ 183   1        SINT16 i=0,j=0;
+ 184   1        //控制显示
+ 185   1        for(i = 0; i < LED_NUMBER; i++)
+ 186   1        {
+ 187   2          led[i].show = OFF;
+ 188   2        }
+ 189   1        //如果232口有扫描数据,则显示扫描进来的数据
+ 190   1        if(uart232.rFlag == ON)
+ 191   1        {
+ 192   2          j = LED_NUMBER-1;
+ 193   2          for(i = uart232.rIndex-1; i>= 0 && j>=0; i--)
+ 194   2          {
+ 195   3            if(uart232.rBuffer[i] >= '0' && uart232.rBuffer[i] <= '9')
+ 196   3            {
+ 197   4              led[j].num = uart232.rBuffer[i]-'0';
+ 198   4              led[j].show = ON;
+ 199   4            }
+ 200   3            else if(uart232.rBuffer[i] >= 'A' && uart232.rBuffer[i] <= 'Z')
+ 201   3            {
+ 202   4              led[j].num = uart232.rBuffer[i]-'A'+10;
+ 203   4              led[j].show = ON;
+ 204   4            }
+ 205   3            else if(uart232.rBuffer[i] >= 'a' && uart232.rBuffer[i] <= 'z')
+ 206   3            {
+ 207   4              led[j].num = uart232.rBuffer[i]-'a'+10;
+ 208   4              led[j].show = ON;
+ 209   4            }
+ 210   3            else if(uart232.rBuffer[i] == '-')
+ 211   3            {
+ 212   4              led[j].num = LED_TBL_MAX-1;
+ 213   4              led[j].show = ON;
+ 214   4            }
+ 215   3            if(uart232.rBuffer[i] != '\r' && uart232.rBuffer[i] !='\n')
+ 216   3              j--;
+ 217   3          }
+ 218   2        }
+ 219   1        //否则,如果有显示信息,则显示信息
+ 220   1        else if(DispInfoCur.SRCodeLen > 0)
+ 221   1        {
+ 222   2          j = LED_NUMBER-1;
+ 223   2          for(i = DispInfoCur.SRCodeLen-1; i>=0 && j>=0; i--)
+ 224   2          {
+ 225   3            if(DispInfoCur.SRCode[i] >= '0' && DispInfoCur.SRCode[i] <= '9')
+ 226   3            {
+ 227   4              led[j].num = DispInfoCur.SRCode[i]-'0';
+ 228   4              led[j].show = ON;
+ 229   4            }
+ 230   3            else if(DispInfoCur.SRCode[i] >= 'A' && DispInfoCur.SRCode[i] <= 'Z')
+ 231   3            {
+ 232   4              led[j].num = DispInfoCur.SRCode[i]-'A'+10;
+ 233   4              led[j].show = ON;
+ 234   4            }
+ 235   3            else if(DispInfoCur.SRCode[i] >= 'a' && DispInfoCur.SRCode[i] <= 'z')
+ 236   3            {
+ 237   4              led[j].num = DispInfoCur.SRCode[i]-'a'+10;
+ 238   4              led[j].show = ON;
+ 239   4            }
+ 240   3            else if(DispInfoCur.SRCode[i] == '-')
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 5   
+
+ 241   3            {
+ 242   4              led[j].num = LED_TBL_MAX-1;
+ 243   4              led[j].show = ON;
+ 244   4            }
+ 245   3            if(uart232.rBuffer[i] != '\r' && uart232.rBuffer[i] !='\n')
+ 246   3              j--;
+ 247   3          }
+ 248   2        }  
+ 249   1      }
+ 250          /*******************************************************************************
+ 251                      开机自检测程序
+ 252              input:   none     
+ 253              output:  none
+ 254          *******************************************************************************/ 
+ 255          void digital_led_dispaddr()
+ 256          {
+ 257   1          //加载地址
+ 258   1          led[0].num = toSettedAddr[0];          
+ 259   1          led[1].num = toSettedAddr[1];
+ 260   1          led[2].num = toSettedAddr[2];
+ 261   1      
+ 262   1          led[0].show = ON;
+ 263   1          led[1].show = ON;
+ 264   1          led[2].show = ON;         
+ 265   1      }
+ 266          
+ 267          /*******************************************************************************
+ 268                      开机自检测程序 显示版本号，各段码，
+ 269              input:   none     
+ 270              output:  none
+ 271          *******************************************************************************/
+ 272          INT8U  const  code   LEDSecBit[7] = {37,38,39,40,41,42,36};   //段码对应的LED库表
+ 273          void Start_Init(void)
+ 274          {
+ 275   1      //  UINT8 i = 0;
+ 276   1        UINT8 i,j;
+ 277   1        //显示版本
+ 278   1        for (i=0; i<LED_NUMBER; i++)
+ 279   1        {
+ 280   2          led[i].num  = Version[i];
+ 281   2      //    led[i].delay = 0;
+ 282   2          led[i].show  = ON;
+ 283   2        }
+ 284   1        DelayMs(800);
+ 285   1          //显示各段码
+ 286   1        for(i = 0; i < 7; i++)
+ 287   1        {
+ 288   2          for(j = 0; j < LED_NUMBER; j++)
+ 289   2          {  led[j].num = LEDSecBit[i];  }        //段码亮
+ 290   2      
+ 291   2          DelayMs(300);    //延时显示
+ 292   2        }
+ 293   1        //显示全8
+ 294   1        for (i=0; i<LED_NUMBER; i++)
+ 295   1        {
+ 296   2          led[i].num  = 0X08;
+ 297   2      //    led[i].delay = 0;
+ 298   2          led[i].show  = ON;
+ 299   2        }
+ 300   1      //  //系统数据复位
+ 301   1        DispInfoCur.SRCodeLen = 0;
+ 302   1        uart232.rFlag   = OFF;
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 6   
+
+ 303   1        uart232.rIndex  = 0;
+ 304   1      
+ 305   1        LED_RXD485_ON;    LED_TXD485_ON;
+ 306   1      
+ 307   1        //点亮LED
+ 308   1      //  for (i=0; i<LED_NUMBER; i++)
+ 309   1      //  {
+ 310   1      //    led[i].num  = 0X08;
+ 311   1      //    led[i].show  = ON;
+ 312   1      //  }
+ 313   1      //  sys.led_scan_flag = ON;
+ 314   1      //  DelayMs(1000);
+ 315   1        //显示地址
+ 316   1        led[0].num = address[0];           
+ 317   1          led[1].num = address[1];
+ 318   1          led[2].num = address[2];
+ 319   1        //点亮指示灯
+ 320   1      //  led_light_ctrl(LED_RED, ON);
+ 321   1        led_light_ctrl(LED_RED);      // 仅亮红灯显示
+ 322   1        DelayMs(500);
+ 323   1      //  led_light_ctrl(LED_RED, OFF);
+ 324   1      //  led_light_ctrl(LED_GREEN, ON);
+ 325   1        led_light_ctrl(LED_GREEN);      // 仅亮绿灯显示
+ 326   1        DelayMs(500);
+ 327   1      //  led_light_ctrl(LED_GREEN, OFF);
+ 328   1      //  led_light_ctrl(LED_BLUE, ON);
+ 329   1        led_light_ctrl(LED_BLUE);     // 仅亮蓝灯显示
+ 330   1        DelayMs(500);
+ 331   1      //  led_light_ctrl(LED_BLUE, OFF);
+ 332   1      
+ 333   1        for (i=0; i<LED_NUMBER; i++)
+ 334   1        { led[i].num  = ' '; }
+ 335   1      
+ 336   1        led_light_ctrl(LED_RG);     // 仅亮红绿灯显示
+ 337   1        DelayMs(500);
+ 338   1        led_light_ctrl(LED_RB);     // 仅亮红蓝灯显示
+ 339   1        DelayMs(500);
+ 340   1        led_light_ctrl(LED_GB);     // 仅亮绿蓝灯显示
+ 341   1        DelayMs(500);
+ 342   1        led_light_ctrl(LED_NONE);   // 灭所有显示
+ 343   1        //点亮信号灯
+ 344   1        CNTRL1_ON;    LED_CNTRL1_ON;    CNTRL4_ON;    LED_CNTRL4_ON;    
+ 345   1        led[0].num = 'F'-'A'+10;      led[1].num = 0X01;    led[2].num = FinishedLED;          
+ 346   1        DelayMs(1000);    
+ 347   1        CNTRL1_OFF;   LED_CNTRL1_OFF;   CNTRL4_OFF;   LED_CNTRL4_OFF;
+ 348   1        CNTRL2_ON;    LED_CNTRL2_ON;    CNTRL5_ON;    LED_CNTRL5_ON;    
+ 349   1        led[0].num = 'F'-'A'+10;      led[1].num = 0X02;    led[2].num = WtTime;           
+ 350   1        DelayMs(1000);
+ 351   1        CNTRL2_OFF;   LED_CNTRL2_OFF;   CNTRL5_OFF;   LED_CNTRL5_OFF;
+ 352   1        CNTRL3_ON;    LED_CNTRL3_ON;    CNTRL6_ON;    LED_CNTRL6_ON;
+ 353   1        led[0].num = 'F'-'A'+10;      led[1].num = 0X03;    led[2].num = FnDefine;           
+ 354   1        DelayMs(1000);
+ 355   1        CNTRL3_OFF;   LED_CNTRL3_OFF;   CNTRL6_OFF;   LED_CNTRL6_OFF;
+ 356   1        led[0].num = 'F'-'A'+10;      led[1].num = 0X04;    led[2].num = DispMode;           
+ 357   1        DelayMs(1000);
+ 358   1        LED_RXD485_OFF;   LED_TXD485_OFF;
+ 359   1        //清除显示
+ 360   1        ClearAll();
+ 361   1      }
+ 362          /*******************************************************************************
+ 363                        main program        
+ 364          *******************************************************************************/   
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 7   
+
+ 365          
+ 366          int main(void) 
+ 367          {   
+ 368   1        DelayMs(50);    //等待电源稳定        
+ 369   1      
+ 370   1        EA = 0;
+ 371   1        digital_led_cntrl_Init();
+ 372   1        IO_Init();
+ 373   1        InitT0();
+ 374   1      
+ 375   1        LoadParaInEeprom();
+ 376   1        baudrate   = BD_9600;
+ 377   1        UART232_Init();
+ 378   1        UART485_Init(); //固定使用38400波特率
+ 379   1      
+ 380   1      
+ 381   1        EA = 1;//使能中断             
+ 382   1        Start_Init();
+ 383   1        M485_CTRL_OFF;
+ 384   1                    
+ 385   1        while(1)
+ 386   1        { 
+ 387   2          P0M1 = 0x00;    //灯塔强推挽输出
+ 388   2          P0M0 = 0x0f;
+ 389   2      
+ 390   2          P1M1 = 0x00;
+ 391   2          P1M0 = 0x83;
+ 392   2          
+ 393   2          //地址设定时显示地址，并亮灯
+ 394   2          if(beSettingAddr == 1 ||  beSettingAddr == 2)
+ 395   2          {
+ 396   3            if(digital_led_refresh == ON)
+ 397   3            {
+ 398   4              digital_led_refresh = OFF;
+ 399   4              digital_led_dispaddr();
+ 400   4            }
+ 401   3          }
+ 402   2          //1个信号灯与3组led指示灯闪烁控制
+ 403   2          CMD_led_flash();
+ 404   2          //灯塔电源控制
+ 405   2          CMD_LigheTower_flash();
+ 406   2          //刷新一次数码管数值（包括显示当前作业的以及数据回显）
+ 407   2          if( digital_led_refresh == ON) 
+ 408   2          {
+ 409   3            digital_led_refresh = OFF;
+ 410   3            digital_led_disp();
+ 411   3          }
+ 412   2          //按键处理(有按键时)
+ 413   2          Scan_Keyboard();
+ 414   2          if (keyStatus != CMD_KEY_NULL) 
+ 415   2          {
+ 416   3            Process_Keyboard();
+ 417   3          }
+ 418   2          //处理485通讯
+ 419   2          if (uart.rFlag == ON)
+ 420   2          {
+ 421   3      //      Send485SerialByte((UINT8 *)uart.rBuffer, uart.rIndex); 
+ 422   3            Cmd_Process();
+ 423   3            uart.rFlag   = OFF;
+ 424   3            uart.rIndex  = 0;
+ 425   3          }
+ 426   2        }                
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:36:21 PAGE 8   
+
+ 427   1      }
+ 428          /*******************************************************************************
+ 429                          END         
+ 430          *******************************************************************************/
+ 431          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1376    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =     58    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

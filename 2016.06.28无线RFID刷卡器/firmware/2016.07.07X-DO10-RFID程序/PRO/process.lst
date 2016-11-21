@@ -1,0 +1,523 @@
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE PROCESS
+OBJECT MODULE PLACED IN ..\OUT\process.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\process.c LARGE OMF2 BROWSE INCDIR(..\SRC;..\INC;..\PR
+                    -O) DEBUG PRINT(.\process.lst) TABS(2) OBJECT(..\OUT\process.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          #define DATA_LEN                7
+   3          #define DEVICE_NAME_LEN   23
+   4          
+   5          /*******************************************************************************
+   6                      ¶Ô¶à×Ö½Ú¶ÁÃüÁîÏìÓ¦
+   7            input:   none     
+   8            output:  none         
+   9          *******************************************************************************/
+  10          void ACK_Multi_Read(void)
+  11          {
+  12   1        UINT8 tIndex = 0;
+  13   1        UINT8 addr;
+  14   1        UINT16 usCRC;
+  15   1              
+  16   1        addr    = address[0] * 100 + address[1]*10 + address[2];    
+  17   1      
+  18   1        uart.wBuffer[0] = addr;                         //addr
+  19   1        uart.wBuffer[1] = 0x03;                         //function code
+  20   1        //¿´×ÓÃüÁî
+  21   1        switch(uart.rBuffer[5])
+  22   1        {
+  23   2          case 0X03:    //¶ÁÈ¡°´Å¥°´ÏÂÐÅÏ¢
+  24   2          {
+  25   3            uart.wBuffer[2] = 0x01;                         //1 byte
+  26   3            if(IsOkPressed)
+  27   3              uart.wBuffer[3] = 0x01;                     //Pressed
+  28   3            else
+  29   3              uart.wBuffer[3] = 0x00;                     //UnPressed
+  30   3            uart.wLen       = 4; 
+  31   3            break;
+  32   3          }
+  33   2          case 0X05:    //¶ÁÈ¡É¨ÃèÇ¹
+  34   2          {
+  35   3            if(uart232.rFlag == ON)
+  36   3            {
+  37   4              uart.wBuffer[2] = uart232.rIndex;
+  38   4              for(tIndex = 0; tIndex < uart232.rIndex; tIndex++)
+  39   4                uart.wBuffer[3+tIndex] = uart232.rBuffer[tIndex];
+  40   4              uart.wLen = 3+uart232.rIndex;
+  41   4            }
+  42   3            else     
+  43   3            {
+  44   4              uart.wBuffer[2] = 0;
+  45   4              uart.wLen = 3;
+  46   4            }
+  47   3            break;
+  48   3          }
+  49   2          default:
+  50   2          {
+  51   3            break;
+  52   3          }
+  53   2        }
+  54   1        usCRC = CRC16(uart.wBuffer, uart.wLen);
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 2   
+
+  55   1        uart.wBuffer[uart.wLen] = (UINT8)usCRC;
+  56   1        uart.wBuffer[uart.wLen+1] = (UINT8)(usCRC>>8);
+  57   1        uart.wLen += 2;                            
+  58   1          
+  59   1        Send485SerialByte((UINT8 *)uart.wBuffer, uart.wLen); 
+  60   1      }
+  61          void ACK_Multi_ReadTestAddr(void)
+  62          {
+  63   1        UINT8 addr;
+  64   1        UINT16 usCRC;
+  65   1              
+  66   1        addr    = address[0] * 100 + address[1]*10 + address[2];    
+  67   1      
+  68   1        uart.wBuffer[0] = addr;                         //addr
+  69   1        uart.wBuffer[1] = 0x03;                         //function code
+  70   1        uart.wBuffer[2] = 0x00;                       //Len
+  71   1        usCRC = CRC16(uart.wBuffer, 3);
+  72   1        uart.wBuffer[3] = (UINT8)usCRC;
+  73   1        uart.wBuffer[4] = (UINT8)(usCRC>>8);
+  74   1        uart.wLen   = 5;                            
+  75   1        Send485SerialByte((UINT8 *)uart.wBuffer, uart.wLen); 
+  76   1      }
+  77          /*******************************************************************************
+  78                      ¶Ô¶à×Ö½ÚÐ´ÃüÁîÕý³£ÏìÓ¦
+  79            input:   none     
+  80            output:  none         
+  81          *******************************************************************************/
+  82          void ACK_Single_Write(void)
+  83          {
+  84   1        Send485SerialByte((UINT8 *)uart.rBuffer, uart.rIndex); 
+  85   1      }
+  86          /*******************************************************************************
+  87                      ¶Ô¶à×Ö½ÚÐ´ÃüÁîÕý³£ÏìÓ¦
+  88            input:   none     
+  89            output:  none         
+  90          *******************************************************************************/
+  91          void ACK_Multi_Write(void)
+  92          {
+  93   1        UINT8 addr    = address[0] * 100 + address[1]*10 + address[2];
+  94   1        UINT16 usCRC;
+  95   1      
+  96   1        uart.wBuffer[0] = addr;                         //addr
+  97   1        uart.wBuffer[1] = 0x10;                         //function code
+  98   1        uart.wBuffer[2] = 0x00;                         //start addr
+  99   1        uart.wBuffer[3] = 0x00;
+ 100   1        uart.wBuffer[4] = 0x00;
+ 101   1        uart.wBuffer[5] = 0x05;
+ 102   1      
+ 103   1        usCRC = CRC16(uart.wBuffer, 6);
+ 104   1      
+ 105   1        uart.wBuffer[6] = (UINT8)usCRC;
+ 106   1        uart.wBuffer[7] = (UINT8)(usCRC>>8);
+ 107   1      
+ 108   1        uart.wLen        = 8; 
+ 109   1        Send485SerialByte((UINT8 *)uart.wBuffer, uart.wLen); 
+ 110   1      }
+ 111          /*******************************************************************************
+ 112            input:   none     
+ 113            output:  none         
+ 114          *******************************************************************************/
+ 115          void ResetAddr(void)
+ 116          {
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 3   
+
+ 117   1        //ÏÔÊ¾Çå³ý,Êý¾Ý¸´Î»
+ 118   1        ClearAll();
+ 119   1        beSettingAddr = 0;
+ 120   1        //µØÖ·ÇåÁã
+ 121   1        address[0] = 0;   address[1] = 0;   address[2] = 0;
+ 122   1        SaveParaToBlock();
+ 123   1      }
+ 124          /*******************************************************************************
+ 125                      Êý¾Ý°üÐ£Ñé,²¢½«MODBUSµÄÊý¾Ý´æÈëcmdBuffer[]ÖÐ
+ 126            input:   none     
+ 127            output:  none 
+ 128            
+ 129          rBuffer[0]: ==> ADDR
+ 130          rBuffer[1]: ==> MODBUS¹¦ÄÜÂë
+ 131          rBuffer[2]: ==> ÆðÊ¼µØÖ·H
+ 132          rBuffer[3]: ==> ÆðÊ¼µØÖ·L
+ 133          rBuffer[4]: ==> ¼Ä´æÆ÷ÊýÁ¿H
+ 134          rBuffer[5]: ==> ¼Ä´æÆ÷ÊýÁ¿L
+ 135          
+ 136          0X03:
+ 137          rBuffer[6]: ==> CRCH
+ 138          rBuffer[7]: ==> CRCL
+ 139          
+ 140          0X10:
+ 141          rBuffer[6]: ==> 2
+ 142          rBuffer[7]: ==> 0/1
+ 143          rBuffer[8]: ==> XXXABCDE
+ 144          rBuffer[9]: ==> CRCH
+ 145          rBuffer[10]: ==> CRCL
+ 146          
+ 147          *******************************************************************************/
+ 148          UINT8 DiscodeProtocalV1(void)
+ 149          {
+ 150   1        UINT8 addr    = address[0] * 100 + address[1]*10 + address[2];
+ 151   1        UINT16 usCRC, retCRC;
+ 152   1        UINT8 lightTowerIndex = 0;
+ 153   1        UINT8 tempValue = 0;
+ 154   1        UINT8 index = 0,i=0;
+ 155   1        UINT16 usValue = 0; 
+ 156   1        //0ºÅ¹ã²¥ÃüÁîµØÖ·£¬²»Ðè»Ø¸´
+ 157   1        if(uart.rBuffer[0] == 0x00 && uart.rBuffer[1] == 0X06 && uart.rIndex == 8)  
+ 158   1        {
+ 159   2          LED_RXD485_ON;
+ 160   2          LED_TXD485_ON;
+ 161   2          //Send485SerialByte((UINT8 *)uart.rBuffer, uart.rIndex);  
+ 162   2          retCRC = CRC16    (uart.rBuffer, uart.rIndex-2);    //CRC
+ 163   2          retCRC=0;
+ 164   2      //    SBUF=(UINT8)(retCRC&0xff);
+ 165   2      //    while(!TI);
+ 166   2      //    TI=0;
+ 167   2      //    SBUF=(UINT8)(retCRC>>8);
+ 168   2          usCRC  = (UINT16) (uart.rBuffer [uart.rIndex-2]);   //CRC_L;
+ 169   2          usCRC += (UINT16) (uart.rBuffer [uart.rIndex-1]<<8);  //CRC_H
+ 170   2          if (retCRC == usCRC)            //crcÐ£Ñé³É¹¦ 
+ 171   2          {
+ 172   3            //00 06 ?? 00 ?? ?? CRCH CRCL
+ 173   3            if(uart.rBuffer[3] == 0X00)         //µØÖ·ÇåÁã
+ 174   3            {
+ 175   4              ResetAddr();
+ 176   4            }
+ 177   3            //00 06 ?? 01 ?? ## CRCH CRCL
+ 178   3            else if(uart.rBuffer[3] == 0X01)        //½ÓÊÕµØÖ·£¬²¢ÏÔÊ¾£¬½øÈëµÈ´ý°´¼üÈ·ÈÏ
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 4   
+
+ 179   3            {
+ 180   4              if(beSettingAddr != 0X02)  //Ö»ÄÜÉèÖÃÒ»´ÎµØÖ·
+ 181   4              {
+ 182   5                beSettingAddr = 1;
+ 183   5                toSettedAddr[0] = (UINT8)(uart.rBuffer[5]/100);
+ 184   5                toSettedAddr[1] = (UINT8)(((UINT8)(uart.rBuffer[5]%100))/10);
+ 185   5                toSettedAddr[2] = uart.rBuffer[5]%10;
+ 186   5                //ÉèÖÃ¸üÐÂÐÅÏ¢£¬ÏÔÊ¾µØÖ·Éè¶¨ÌáÊ¾
+ 187   5                led_flash_mode = LED_FLASH_MODE_ALWAYS; //³£ÁÁ
+ 188   5                led_flash_NO = LED_GREEN;       //½ÓÊÕÇ°ÁÁµÚÒ»×éµÆ£¬½ÓÊÕºóÁÁµÚ¶þ×éµÆ
+ 189   5                digital_led_refresh = ON;
+ 190   5              }
+ 191   4            }
+ 192   3            //0X10¶Î  ¹ã²¥ÏÔÊ¾
+ 193   3            //00 06 ?? 10 ## ## CRCH CRCL
+ 194   3            else if(uart.rBuffer[3] == 0X10)        //¹ã²¥ÏÔÊ¾ÃüÁî,Èç¹û## ## == 0X00 0X00£¬ÔòÏÔÊ¾µØÖ·
+ 195   3            {
+ 196   4              usValue = ((UINT16)(uart.rBuffer[4])) *256 + (UINT16)(uart.rBuffer[5]);
+ 197   4              if(usValue == 0X00)
+ 198   4              {
+ 199   5                  led[0].num = address[0];      led[1].num = address[1];      led[2].num = address[2];
+ 200   5              }
+ 201   4              else if(usValue == 10001)
+ 202   4              {
+ 203   5                  led[0].num = 0X0F;          led[1].num = 0X01;          led[2].num = FinishedLED;
+ 204   5              }
+ 205   4              else if(usValue == 10002)
+ 206   4              {
+ 207   5                  led[0].num = 0X0F;          led[1].num = 0X02;          led[2].num = WtTime;
+ 208   5              }
+ 209   4              else if(usValue == 10003)
+ 210   4              {
+ 211   5                  led[0].num = 0X0F;          led[1].num = 0X03;          led[2].num = FnDefine;
+ 212   5              }
+ 213   4              else if(usValue == 10004)
+ 214   4              {
+ 215   5                  led[0].num = 0X0F;          led[1].num = 0X04;          led[2].num = DispMode;
+ 216   5              }
+ 217   4              else
+ 218   4              {
+ 219   5                led[0].num = (UINT8)((  usValue % 1000)  / 100);
+ 220   5                led[1].num = (UINT8)((  usValue % 100)    / 10);    
+ 221   5                led[2].num = (UINT8)(   usValue  % 10);
+ 222   5              }
+ 223   4                led[0].show = ON;     led[1].show = ON;     led[2].show = ON;
+ 224   4      
+ 225   4            //  led_flash_NO = LED_GREEN;   
+ 226   4                led_light_ctrl(LED_RB); 
+ 227   4              DelayMs(1000);    //ÑÓÊ±ÏÔÊ¾
+ 228   4              led_flash_mode = LED_FLASH_MODE_ALWAYS;
+ 229   4              //ÏÔÊ¾µÆËþ
+ 230   4              for(lightTowerIndex = 0; lightTowerIndex < 6; lightTowerIndex++)
+ 231   4              {
+ 232   5                LightTowerCtl[lightTowerIndex].led_status = ON;
+ 233   5                //ÁÁÃðÖÜÆÚ¿ØÖÆÊý¾Ý»ñÈ¡
+ 234   5                LightTowerCtl[lightTowerIndex].led_flash_period = 1000;
+ 235   5                //ÁÁÃð±ÈÀý¿ØÖÆÊý¾Ý»ñÈ¡
+ 236   5                  LightTowerCtl[lightTowerIndex].led_switch_ratio = LED_FLASH_MODE_1V5;//(1:on  10:off)
+ 237   5                //³õÊ¼»¯×´Ì¬¡¢¼ÆÊýÊý¾Ý
+ 238   5                LightTowerCtl[lightTowerIndex].led_status_cur = OFF;
+ 239   5                LightTowerCtl[lightTowerIndex].led_flash_count = 0;
+ 240   5              }
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 5   
+
+ 241   4            }
+ 242   3            //00 06 ?? 11 ?? ?? CRCH CRCL
+ 243   3            else if(uart.rBuffer[3] == 0X11)        //¹ã²¥Çå³ý
+ 244   3            {
+ 245   4              ClearAll();
+ 246   4              beSettingAddr = 0;
+ 247   4            }
+ 248   3            //0X20¶Î  ¹ã²¥´æ´¢¶Î
+ 249   3            //00 06 ?? 20 ?? ## CRCH CRCL
+ 250   3            else if(uart.rBuffer[3] == 0X20)        //¹ã²¥ÉèÖÃ²ÎÊý1(±êÇ©¶ÔÓ¦¼ð»õÈÎÎñÍê³ÉºóÁÁµÆÄ£Ê½)
+ 251   3            {
+ 252   4                //ÏÔÊ¾ÁÁµÆÖµ
+ 253   4                led[0].num = 0X0F;      led[1].num = 0X01;      led[2].num = (UINT8)(uart.rBuffer[5]);
+ 254   4                led[0].show = ON;     led[1].show = ON;     led[2].show = ON;
+ 255   4      
+ 256   4              led_flash_NO = (UINT8)(uart.rBuffer[5]);
+ 257   4              led_flash_mode = LED_FLASH_MODE_ALWAYS;
+ 258   4              FinishedLED = led_flash_NO;
+ 259   4              if(FinishedLED > 3)
+ 260   4                 FinishedLED = 0;
+ 261   4              SaveParaToBlock();
+ 262   4            }
+ 263   3            //00 06 ?? 21 ?? ## CRCH CRCL
+ 264   3            else if(uart.rBuffer[3] == 0X21)        //¹ã²¥ÉèÖÃ²ÎÊý2(Ò»¶Ô¶àÈÎÎñÊ±£¬½ø¶ÈÌõµÈ´ýÊ±¼ä)
+ 265   3            {
+ 266   4                //ÏÔÊ¾½ø¶ÈÌõÊ±¼äÖµ
+ 267   4                led[0].num = 0X0F;      led[1].num = 0X02;      led[2].num = (UINT8)(uart.rBuffer[5]);
+ 268   4                led[0].show = ON;     led[1].show = ON;     led[2].show = ON;
+ 269   4      
+ 270   4              WtTime = (UINT8)(uart.rBuffer[5]);
+ 271   4              if(WtTime > 5)
+ 272   4                 WtTime = 5;
+ 273   4              SaveParaToBlock();
+ 274   4            }
+ 275   3            //00 06 ?? 22 ?? ## CRCH CRCL
+ 276   3            else if(uart.rBuffer[3] == 0X22)        //¹ã²¥ÉèÖÃ²ÎÊý3(¹¦ÄÜ¼üÉè¶¨)
+ 277   3            {
+ 278   4                //ÏÔÊ¾¹¦ÄÜ¼ü¶¨ÒåÖµ
+ 279   4                led[0].num = 0X0F;      led[1].num = 0X03;      led[2].num = (UINT8)(uart.rBuffer[5]);
+ 280   4                led[0].show = ON;     led[1].show = ON;     led[2].show = ON;
+ 281   4      
+ 282   4              FnDefine = (UINT8)(uart.rBuffer[5]);
+ 283   4              if(FnDefine > 1)
+ 284   4                 FnDefine = 0;
+ 285   4              SaveParaToBlock();
+ 286   4            }
+ 287   3            //00 06 ?? 23 ?? ## CRCH CRCL
+ 288   3            else if(uart.rBuffer[3] == 0X23)        //¹ã²¥ÉèÖÃ²ÎÊý4(ÏÔÊ¾Ä£Ê½Éè¶¨)
+ 289   3            {
+ 290   4                //ÏÔÊ¾ÏÔÊ¾Ä£Ê½¶¨ÒåÖµ
+ 291   4                led[0].num = 0X0F;      led[1].num = 0X04;      led[2].num = (UINT8)(uart.rBuffer[5]);
+ 292   4                led[0].show = ON;     led[1].show = ON;     led[2].show = ON;
+ 293   4      
+ 294   4              DispMode = (UINT8)(uart.rBuffer[5]);
+ 295   4              if(DispMode > 1)
+ 296   4                 DispMode = 0;
+ 297   4              SaveParaToBlock();
+ 298   4            }
+ 299   3          }
+ 300   2          LED_RXD485_OFF;
+ 301   2          LED_TXD485_OFF;
+ 302   2        }
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 6   
+
+ 303   1        //ÆäËüÍ¨ÐÅÃüÁî
+ 304   1        else if (uart.rBuffer[0] == addr)         //µØÖ·Ð£Ñé
+ 305   1        {
+ 306   2          LED_RXD485_ON;
+ 307   2          LED_TXD485_ON;
+ 308   2      
+ 309   2          retCRC = CRC16(uart.rBuffer, uart.rIndex-2);
+ 310   2          usCRC  = (UINT16) (uart.rBuffer [uart.rIndex-2]);   //CRC_L;
+ 311   2          usCRC += (UINT16) (uart.rBuffer [uart.rIndex-1]<<8);  //CRC_H
+ 312   2      
+ 313   2          if (retCRC == usCRC)            //crcÐ£Ñé³É¹¦ 
+ 314   2          {
+ 315   3            switch (uart.rBuffer[1])
+ 316   3            {
+ 317   4            case READ_MULTI_BYTE: //ÖÕ¶ËÉÏ´«Êý¾Ý£¬¶ÁÈ¡É¨ÃèÇ¹
+ 318   4              {
+ 319   5                if((uart.rBuffer[4] == 0x00) && (uart.rBuffer[5] == 0x01))      //¼Ä´æÆ÷ÊýÁ¿01±íÊ¾³¢ÊÔµØÖ·ÊÇ·ñÒÑ¾­Éè¶¨µÄ
+             -ÃüÁî
+ 320   5                {
+ 321   6                  ACK_Multi_ReadTestAddr();                   //µØÖ·Éè¶¨ÊÇ·ñ³É¹¦²âÊÔ
+ 322   6                }
+ 323   5                else if ((uart.rBuffer[4] == 0x00) && (uart.rBuffer[5] == 0x03))  //¼Ä´æÆ÷ÊýÁ¿03±íÊ¾¶ÁÈ¡ÊÇ·ñ°´OK¼üµÄÃü
+             -Áî
+ 324   5                {                       
+ 325   6                  ACK_Multi_Read();                       //Ó¦´ðModbus 0x03ºÅ²É¼¯°´Å¥ÃüÁî
+ 326   6                }
+ 327   5                else if ((uart.rBuffer[4] == 0x00) && (uart.rBuffer[5] == 0x05))  //¼Ä´æÆ÷ÊýÁ¿05±íÊ¾¶ÁÈ¡É¨Ãèµ½µÄÌõÂëÐÅ
+             -Ï¢
+ 328   5                {                       
+ 329   6                  ACK_Multi_Read();                       //Ó¦´ðModbus 0x03ºÅ²É¼¯°´Å¥ÃüÁî
+ 330   6                }
+ 331   5                break;
+ 332   5                  }
+ 333   4            case WRITE_SINGLE_BYTE: //¿ØÖÆÆ÷ÏÂ´«Êý¾Ý,0X06ºÅmodbusÃüÁî£ºÇåÆÁÃüÁî£»Çå³ý°´¼ü°´ÏÂÐÅÏ¢ÃüÁî
+ 334   4              {
+ 335   5                if(uart.rIndex == 0X08)           //ËùÓÐ06ºÅÃüÁî¶¼ÊÇ8×Ö½Ú³¤¶È
+ 336   5                {
+ 337   6                  ACK_Single_Write();
+ 338   6                  //Çå³ýÈ«²¿(Çå³ýÏÔÊ¾ÐÅÏ¢¡¢µÆ¡¢·äÃùÆ÷)£¬Çå³ýOKÐÅÏ¢+É¨ÃèÇ¹ÐÅÏ¢+µÆËþÐÅÏ¢
+ 339   6                  if(uart.rBuffer[3] == 0X00)
+ 340   6                  {
+ 341   7                    ClearAll();
+ 342   7                  }
+ 343   6                  //Çå³ýÏÔÊ¾²¿·Ö(Çå³ýÏÔÊ¾ÐÅÏ¢¡¢µÆ¡¢·äÃùÆ÷)£¬²»°üÀ¨£¬Çå³ýOKÐÅÏ¢+É¨ÃèÇ¹ÐÅÏ¢+µÆËþÐÅÏ¢
+ 344   6                  else if(uart.rBuffer[3] == 0X01 || uart.rBuffer[3] == 0X02)
+ 345   6                  {
+ 346   7                    Display_Clear();
+ 347   7                  }
+ 348   6                  //Çå³ýÉ¨ÃèÇ¹ÐÅÏ¢
+ 349   6                  else if(uart.rBuffer[3] == 0x05)    
+ 350   6                  {
+ 351   7                          uart232.rFlag   = OFF;
+ 352   7                          uart232.rIndex  = 0;
+ 353   7                    digital_led_refresh = ON;
+ 354   7                  }
+ 355   6                  //Çå³ýOK°´Å¥ÐÅÏ¢
+ 356   6                  else if(uart.rBuffer[3] == 0X10)      
+ 357   6                  {
+ 358   7                    IsOkPressed = FALSE;              
+ 359   7                  }
+ 360   6                  //Ëø¶¨½âËø
+ 361   6                  if(uart.rBuffer[3] == 0x20)       
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 7   
+
+ 362   6                  {
+ 363   7                    if(uart.rBuffer[5] == 0x00)     //Ëø¶¨
+ 364   7                    {
+ 365   8                      SystemLocked = OFF;
+ 366   8                    }
+ 367   7                    else if(uart.rBuffer[5] == 0x01)  //½âËø
+ 368   7                    {
+ 369   8                      SystemLocked = ON;
+ 370   8                    }
+ 371   7                  }
+ 372   6                  else if(uart.rBuffer[3] >= 0x11 && uart.rBuffer[3] <= 0x16) //µÆËþ¿ØÖÆ
+ 373   6                  {
+ 374   7                    lightTowerIndex = uart.rBuffer[3]-0X11;
+ 375   7                    tempValue = (uart.rBuffer[5] >> 5)&0X07;
+ 376   7                    //ÁÁµÆ¡¢ÃðµÈ¿ØÖÆÊý¾Ý»ñÈ¡
+ 377   7                    LightTowerCtl[lightTowerIndex].led_status = tempValue != 0 ? ON :OFF;
+ 378   7                    //ÁÁÃðÖÜÆÚ¿ØÖÆÊý¾Ý»ñÈ¡
+ 379   7                    switch((uart.rBuffer[5] >> 3)&0X3)
+ 380   7                    {
+ 381   8                    case 0:   LightTowerCtl[lightTowerIndex].led_flash_period = 80;   break;
+ 382   8                    case 1:   LightTowerCtl[lightTowerIndex].led_flash_period = 160;    break;
+ 383   8                    case 2:   LightTowerCtl[lightTowerIndex].led_flash_period = 320;    break;
+ 384   8                    case 3:   LightTowerCtl[lightTowerIndex].led_flash_period = 640;    break;
+ 385   8                    }
+ 386   7                    //ÁÁÃð±ÈÀý¿ØÖÆÊý¾Ý»ñÈ¡
+ 387   7                      LightTowerCtl[lightTowerIndex].led_switch_ratio = (uart.rBuffer[5] >> 0)&0X07;
+ 388   7                    //³õÊ¼»¯×´Ì¬¡¢¼ÆÊýÊý¾Ý
+ 389   7                    LightTowerCtl[lightTowerIndex].led_status_cur = OFF;
+ 390   7                    LightTowerCtl[lightTowerIndex].led_flash_count = 0;
+ 391   7                  }
+ 392   6                }
+ 393   5                break;
+ 394   5              }
+ 395   4            case WRITE_MULTI_BYTE:                            //ÖÕ¶ËÏÂ´«Êý¾Ý
+ 396   4              {
+ 397   5                if (uart.rBuffer[8] == uart.rIndex-11 && uart.rBuffer[8] <= MAX_SRCODE_NUM) 
+ 398   5                {
+ 399   6                  ACK_Multi_Write();
+ 400   6                  //¿ªÊ¼´¦ÀíÃüÁî£¬°üÀ¨Êý¾ÝÔÝ´æ½ÓÊÕ¡¢¸÷ÖÖÏìÓ¦µÈ
+ 401   6                  //´Ë´¦Éý¼¶°æ±¾ÖÐÓ¦»ñÈ¡ÁÁµÆÄ£Ê½ uart.rBuffer[6]£¬·äÃùÆ÷Ä£Ê½ uart.rBuffer[7]
+ 402   6                  //uart.rBuffer[6]==>LEDÖ¸Ê¾µÆµÄÏÔÊ¾·½Ê½´¦Àí
+ 403   6                  //ÉÁË¸µÆÐòºÅ
+ 404   6                    led_flash_NO   = (uart.rBuffer[6] >> 5)&0X07;
+ 405   6                  //ÉÁË¸Ê±¼ä¼ä¸ô
+ 406   6                  switch((uart.rBuffer[6] >> 3)&0X3)
+ 407   6                  {
+ 408   7                  case 0:   led_flash_period = 80;    break;
+ 409   7                  case 1:   led_flash_period = 160;   break;
+ 410   7                  case 2:   led_flash_period = 320;   break;
+ 411   7                  case 3:   led_flash_period = 640;   break;
+ 412   7                  default:  led_flash_period = 640;   break;
+ 413   7                  }
+ 414   6                  //ÉÁË¸Ä£Ê½
+ 415   6                    led_flash_mode   = (uart.rBuffer[6] >> 0)&0X07;
+ 416   6                  //ÉÁË¸ÓÃÊý¾ÝÖÃÎ»
+ 417   6                  led_flash_status = 0;
+ 418   6                  sys.led_flash_count = 0;
+ 419   6                  //ÏÔÊ¾×Ö·ûÐÅÏ¢
+ 420   6                  DispInfoCur.SRCodeLen = uart.rBuffer[8];
+ 421   6                  for(index = 0; index < DispInfoCur.SRCodeLen; index++)
+ 422   6                    DispInfoCur.SRCode[index] = uart.rBuffer[9+index];
+ 423   6                  digital_led_refresh = ON;
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 8   
+
+ 424   6                }
+ 425   5                break;
+ 426   5              }
+ 427   4            default:
+ 428   4              {
+ 429   5                break;
+ 430   5              }
+ 431   4            }
+ 432   3          }
+ 433   2          LED_RXD485_OFF;
+ 434   2          LED_TXD485_OFF;
+ 435   2        }
+ 436   1        for(i=0;i<50;i++)
+ 437   1        {
+ 438   2          uart.rBuffer[i]=0;
+ 439   2        } 
+ 440   1        uart.rIndex = 0;
+ 441   1        uart.rFlag  = OFF;
+ 442   1      
+ 443   1        return OK;
+ 444   1      }
+ 445          
+ 446          /*******************************************************************************
+ 447                      ´¦ÀíMODBUS×ÜÕ¾ÏÂ·¢µÄÃüÁî
+ 448          0X03ÃüÁî:  ¹¦ÄÜÂë             =>  1 BYTE  (0X03)
+ 449                                  ÆðÊ¼µØÖ·      =>   2 BYTE (0X0000~0XFFFF)
+ 450                                  ¼Ä´æÆ÷ÊýÁ¿=>   2 BYTE (1~125)                       
+ 451          
+ 452          0X10ÃüÁî:  ¹¦ÄÜÂë             =>   1 BYTE (0X10)
+ 453                                  ÆðÊ¼µØÖ·      =>   2 BYTE (0X0000~0XFFFF)
+ 454                                  ¼Ä´æÆ÷ÊýÁ¿=>   2 BYTE (1~120)
+ 455                                  ×Ö½ÚÊý            =>   1 BYTE (2 )
+ 456                                  ¼Ä´æÆ÷Êý1    =>   1 BYTE  ==> ÊÇ·ñÇëÌõÐÎÂë»º³åÇø,0²»Çå,1Çå³ý
+ 457                                  ¼Ä´æÆ÷Êý2    =>   1 BYTE  ==> Êä³ö5¸öLEDµÈ¿ØÖÆ×´Ì¬
+ 458                                                                                             //xxxabcdef => 0~4bit ´
+             -ú±íµÆµÄ¿ª¹Ø×´Ì¬
+ 459          *******************************************************************************/
+ 460          void Cmd_Process(void)
+ 461          {
+ 462   1          //Êý¾Ý°ü³¤¶È²»¹»
+ 463   1        UINT8 lightTowerIndex = 0;
+ 464   1        UINT8 tempDiscodeValue = 0X00;
+ 465   1        if (uart.rIndex < ONE_CMD_MIN_LENGTH)
+ 466   1          return;       
+ 467   1          //ÏÈ¿´µØÖ·¡¢CRCÐ£Ñé¡¢Êý¾Ý³¤¶ÈµÈÅÐ¶Ï
+ 468   1        //ÔÙ¸ù¾ÝµÚ¶þ¸ö×Ö½ÚµÄ·¶Î§ÅÐ¶ÏÊÇ²ÉÓÃÐÂÐ­Òé½âÎö»¹ÊÇ¾ÉÐ­Òé½âÎö
+ 469   1        //µØÖ·ÓëCRCÊý¾ÝÐ£Ñé,ÏÂ´«Ö¸Áî´æ´¢,MODBUSÓ¦´ð,CRC_Checkº¯ÊýÖÐ°üº¬µØÖ·Éè¶¨ÃüÁî
+ 470   1        DiscodeProtocalV1();
+ 471   1      }
+ 472          /*******************************************************************************
+ 473                          END         
+ 474          *******************************************************************************/
+ 475          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2121    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      13
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.52.0.0   PROCESS                                                           08/18/2016 09:16:05 PAGE 9   
+
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+"MAIN.obj",
+"RC522.obj" 
+TO "12122" 
+RAMSIZE(256) 

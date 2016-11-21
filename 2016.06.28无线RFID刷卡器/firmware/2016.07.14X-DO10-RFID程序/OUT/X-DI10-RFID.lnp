@@ -1,0 +1,13 @@
+"..\OUT\STARTUP.obj",
+"..\OUT\crc.obj",
+"..\OUT\eeprom.obj",
+"..\OUT\key.obj",
+"..\OUT\led.obj",
+"..\OUT\main.obj",
+"..\OUT\process.obj",
+"..\OUT\uart.obj",
+"..\OUT\timer.obj",
+"..\OUT\delay.obj",
+"..\OUT\init.obj" 
+TO "..\OUT\X-DI10-RFID" 
+PRINT(".\X-DI10-RFID.m51") RAMSIZE(256) 

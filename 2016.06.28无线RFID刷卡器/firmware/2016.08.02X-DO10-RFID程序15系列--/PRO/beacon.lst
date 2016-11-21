@@ -1,0 +1,550 @@
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE BEACON
+OBJECT MODULE PLACED IN ..\OUT\beacon.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\beacon.c LARGE OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..
+                    -\INC;..\PRO;..\SRC) DEBUG PRINT(.\beacon.lst) TABS(2) OBJECT(..\OUT\beacon.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          LIGHTTOWER_CTL LightTowerCtl[10];
+   3          ////////////////////////////////////////////////////////////////////////////////
+   4          // ¹¦ÄÜÃèÊö : »ñÈ¡µÆËþÖÜÆÚÄÚµãÁÁÊ±¼ä£¬ÓëµÆËþÏ¨ÃðÊ±¼äÐÎ³ÉÒ»ÖÜÆÚ
+   5          // ÊäÈë²ÎÊý : LightTowIndex£º  µÚ¼¸¸öµÆËþ
+   6          // ·µ»Ø²ÎÊý : µÆËþÖÜÆÚÄÚµãÁÁÊ±¼ä
+   7          // ËµÃ÷     :  
+   8          ////////////////////////////////////////////////////////////////////////////////
+   9          UINT16 GetLightTowerOnTime(int LightTowIndex)
+  10          {
+  11   1        UINT16 unRet = LightTowerCtl[LightTowIndex].led_flash_period;
+  12   1        switch(LightTowerCtl[LightTowIndex].led_switch_ratio)
+  13   1        {
+  14   2        case 0X00:  
+  15   2          break;        //³£ÁÁÄ£Ê½£¬²»»áµ÷ÓÃ´Ëº¯Êý
+  16   2        case 0X01: 
+  17   2            unRet = LightTowerCtl[LightTowIndex].led_flash_period/2;
+  18   2            break;
+  19   2        case 0X02:  
+  20   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3;
+  21   2            break;
+  22   2        case 0X03:
+  23   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6;  
+  24   2            break;
+  25   2        case 0X04:  
+  26   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11;
+  27   2          break;
+  28   2        case 0X05:
+  29   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3*2;
+  30   2          break;
+  31   2        case 0X06:
+  32   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6*5;
+  33   2          break;
+  34   2        case 0X07:
+  35   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11*10;
+  36   2          break;
+  37   2        default:
+  38   2          break;
+  39   2        }
+  40   1        return unRet;
+  41   1      }
+  42          ////////////////////////////////////////////////////////////////////////////////
+  43          // ¹¦ÄÜÃèÊö : »ñÈ¡µÆËþÖÜÆÚÄÚÏ¨ÃðÊ±¼ä£¬ÓëµÆËþµãÁÁÊ±¼äÐÎ³ÉÒ»ÖÜÆÚ
+  44          // ÊäÈë²ÎÊý : LightTowIndex£º  µÚ¼¸¸öµÆËþ
+  45          // ·µ»Ø²ÎÊý : µÆËþÖÜÆÚÄÚÏ¨ÃðÊ±¼ä
+  46          // ËµÃ÷     :  
+  47          ////////////////////////////////////////////////////////////////////////////////
+  48          UINT16 GetLightTowerOffTime(int LightTowIndex)
+  49          {
+  50   1        UINT16 unRet = LightTowerCtl[LightTowIndex].led_flash_period;
+  51   1        switch(LightTowerCtl[LightTowIndex].led_switch_ratio)
+  52   1        {
+  53   2        case 0X00:                    //³£ÁÁÄ£Ê½£¬²»»áµ÷ÓÃ´Ëº¯Êý
+  54   2          break;      
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 2   
+
+  55   2        case 0X01:
+  56   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/2;
+  57   2          break;
+  58   2        case 0X05:
+  59   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3;
+  60   2          break;
+  61   2        case 0X06:
+  62   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6;
+  63   2          break;
+  64   2        case 0X07:
+  65   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11;
+  66   2          break;
+  67   2        case 0X02:
+  68   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3*2;
+  69   2          break;
+  70   2        case 0X03:
+  71   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6*5;
+  72   2          break;
+  73   2        case 0X04:
+  74   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11*10;
+  75   2          break;
+  76   2        default:
+  77   2          break;
+  78   2        }
+  79   1        return unRet;
+  80   1      }
+  81          ////////////////////////////////////////////////////////////////////////////////
+  82          // ¹¦ÄÜÃèÊö : µÆËþÁÁÃðÖÜÆÚµÈ¿ØÖÆ£¬
+  83          // ÊäÈë²ÎÊý : ÎÞ
+  84          // ·µ»Ø²ÎÊý : ÎÞ
+  85          // ËµÃ÷     :  
+  86          ////////////////////////////////////////////////////////////////////////////////
+  87          void CMD_LigheTower_flash(void)
+  88          { 
+  89   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+  90   1        //LED1
+  91   1        if(LightTowerCtl[0].led_status == ON)
+  92   1        {
+  93   2          
+  94   2          if(LightTowerCtl[0].led_switch_ratio == LED_FLASH_MODE_ALWAYS) //³£ÁÁ
+  95   2          {
+  96   3                CNTRL1_ON;
+  97   3          }
+  98   2          
+  99   2          else                                                           //ÉÁË¸
+ 100   2          { 
+ 101   3            
+ 102   3            if(LightTowerCtl[0].led_status_cur == OFF)                   //µ±Ç°µÆÎªÃð×´Ì¬
+ 103   3            {
+ 104   4              
+ 105   4              if(LightTowerCtl[0].led_flash_count == 0)                  //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±
+             -äµÆÁÁÖÜÆÚ²ÎÊý
+ 106   4              {
+ 107   5                    CNTRL1_ON;
+ 108   5      
+ 109   5                LightTowerCtl[0].led_status_cur = ON;
+ 110   5                LightTowerCtl[0].led_flash_count = GetLightTowerOnTime(0);
+ 111   5              }
+ 112   4            }
+ 113   3            
+ 114   3            else                                                         //µ±Ç°ÎªÁÁµÆ
+ 115   3            {
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 3   
+
+ 116   4              
+ 117   4              if(LightTowerCtl[0].led_flash_count == 0)                  //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±
+             -äµÆÃðÖÜÆÚ²ÎÊý
+ 118   4              {
+ 119   5                    CNTRL1_OFF;
+ 120   5      
+ 121   5                LightTowerCtl[0].led_status_cur = OFF;
+ 122   5                LightTowerCtl[0].led_flash_count = GetLightTowerOffTime(0);
+ 123   5              }
+ 124   4            }
+ 125   3          }
+ 126   2        }
+ 127   1        else
+ 128   1        {
+ 129   2              CNTRL1_OFF;
+ 130   2        }
+ 131   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 132   1        //LED2
+ 133   1        if(LightTowerCtl[1].led_status == ON)
+ 134   1        {
+ 135   2          
+ 136   2          if(LightTowerCtl[1].led_switch_ratio == LED_FLASH_MODE_ALWAYS)      //³£ÁÁ
+ 137   2          {
+ 138   3                CNTRL2_ON;
+ 139   3          }
+ 140   2          
+ 141   2          else                                                                //ÉÁË¸
+ 142   2          { 
+ 143   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 144   3            if(LightTowerCtl[1].led_status_cur == OFF)
+ 145   3            {
+ 146   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 147   4              if(LightTowerCtl[1].led_flash_count == 0)
+ 148   4              {
+ 149   5                    CNTRL2_ON;
+ 150   5                LightTowerCtl[1].led_status_cur = ON;
+ 151   5                LightTowerCtl[1].led_flash_count = GetLightTowerOnTime(1);
+ 152   5              }
+ 153   4            }
+ 154   3            //µ±Ç°ÎªÁÁµÆ
+ 155   3            else
+ 156   3            {
+ 157   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 158   4              if(LightTowerCtl[1].led_flash_count == 0)
+ 159   4              {
+ 160   5                    CNTRL2_OFF;
+ 161   5      
+ 162   5                LightTowerCtl[1].led_status_cur = OFF;
+ 163   5                LightTowerCtl[1].led_flash_count = GetLightTowerOffTime(1);
+ 164   5              }
+ 165   4            }
+ 166   3          }
+ 167   2        }
+ 168   1        else
+ 169   1        {
+ 170   2              CNTRL2_OFF;
+ 171   2        }
+ 172   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 173   1        //LED3
+ 174   1        if(LightTowerCtl[2].led_status == ON)
+ 175   1        {
+ 176   2          //³£ÁÁ
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 4   
+
+ 177   2          if(LightTowerCtl[2].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 178   2          {
+ 179   3                CNTRL3_ON;
+ 180   3          }
+ 181   2          //ÉÁË¸
+ 182   2          else
+ 183   2          { 
+ 184   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 185   3            if(LightTowerCtl[2].led_status_cur == OFF)
+ 186   3            {
+ 187   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 188   4              if(LightTowerCtl[2].led_flash_count == 0)
+ 189   4              {
+ 190   5                    CNTRL3_ON;
+ 191   5      
+ 192   5                LightTowerCtl[2].led_status_cur = ON;
+ 193   5                LightTowerCtl[2].led_flash_count = GetLightTowerOnTime(2);
+ 194   5              }
+ 195   4            }
+ 196   3            //µ±Ç°ÎªÁÁµÆ
+ 197   3            else
+ 198   3            {
+ 199   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 200   4              if(LightTowerCtl[2].led_flash_count == 0)
+ 201   4              {
+ 202   5                    CNTRL3_OFF;
+ 203   5      
+ 204   5                LightTowerCtl[2].led_status_cur = OFF;
+ 205   5                LightTowerCtl[2].led_flash_count = GetLightTowerOffTime(2);
+ 206   5              }
+ 207   4            }
+ 208   3          }
+ 209   2        }
+ 210   1        else
+ 211   1        {
+ 212   2              CNTRL3_OFF;
+ 213   2        }
+ 214   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 215   1        //LED4
+ 216   1        if(LightTowerCtl[3].led_status == ON)
+ 217   1        {
+ 218   2          //³£ÁÁ
+ 219   2          if(LightTowerCtl[3].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 220   2          {
+ 221   3                CNTRL4_ON;
+ 222   3          }
+ 223   2          //ÉÁË¸
+ 224   2          else
+ 225   2          { 
+ 226   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 227   3            if(LightTowerCtl[3].led_status_cur == OFF)
+ 228   3            {
+ 229   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 230   4              if(LightTowerCtl[3].led_flash_count == 0)
+ 231   4              {
+ 232   5                    CNTRL4_ON;
+ 233   5      
+ 234   5                LightTowerCtl[3].led_status_cur = ON;
+ 235   5                LightTowerCtl[3].led_flash_count = GetLightTowerOnTime(3);
+ 236   5              }
+ 237   4            }
+ 238   3            //µ±Ç°ÎªÁÁµÆ
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 5   
+
+ 239   3            else
+ 240   3            {
+ 241   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 242   4              if(LightTowerCtl[3].led_flash_count == 0)
+ 243   4              {
+ 244   5                    CNTRL4_OFF;
+ 245   5      
+ 246   5                LightTowerCtl[3].led_status_cur = OFF;
+ 247   5                LightTowerCtl[3].led_flash_count = GetLightTowerOffTime(3);
+ 248   5              }
+ 249   4            }
+ 250   3          }
+ 251   2        }
+ 252   1        else
+ 253   1        {
+ 254   2              CNTRL4_OFF;
+ 255   2        }
+ 256   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 257   1        //LED5
+ 258   1        if(LightTowerCtl[4].led_status == ON)
+ 259   1        {
+ 260   2          //³£ÁÁ
+ 261   2          if(LightTowerCtl[4].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 262   2          {
+ 263   3                CNTRL5_ON;
+ 264   3          }
+ 265   2          //ÉÁË¸
+ 266   2          else
+ 267   2          { 
+ 268   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 269   3            if(LightTowerCtl[4].led_status_cur == OFF)
+ 270   3            {
+ 271   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 272   4              if(LightTowerCtl[4].led_flash_count == 0)
+ 273   4              {
+ 274   5                    CNTRL5_ON;
+ 275   5      
+ 276   5                LightTowerCtl[4].led_status_cur = ON;
+ 277   5                LightTowerCtl[4].led_flash_count = GetLightTowerOnTime(4);
+ 278   5              }
+ 279   4            }
+ 280   3            //µ±Ç°ÎªÁÁµÆ
+ 281   3            else
+ 282   3            {
+ 283   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 284   4              if(LightTowerCtl[4].led_flash_count == 0)
+ 285   4              {
+ 286   5                    CNTRL5_OFF;
+ 287   5      
+ 288   5                LightTowerCtl[4].led_status_cur = OFF;
+ 289   5                LightTowerCtl[4].led_flash_count = GetLightTowerOffTime(4);
+ 290   5              }
+ 291   4            }
+ 292   3          }
+ 293   2        }
+ 294   1        else
+ 295   1        {
+ 296   2              CNTRL5_OFF;
+ 297   2        }
+ 298   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 299   1        //LED6
+ 300   1        if(LightTowerCtl[5].led_status == ON)
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 6   
+
+ 301   1        {
+ 302   2          //³£ÁÁ
+ 303   2          if(LightTowerCtl[5].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 304   2          {
+ 305   3                CNTRL6_ON;
+ 306   3          }
+ 307   2          //ÉÁË¸
+ 308   2          else
+ 309   2          { 
+ 310   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 311   3            if(LightTowerCtl[5].led_status_cur == OFF)
+ 312   3            {
+ 313   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 314   4              if(LightTowerCtl[5].led_flash_count == 0)
+ 315   4              {
+ 316   5                    CNTRL6_ON;
+ 317   5      
+ 318   5                LightTowerCtl[5].led_status_cur = ON;
+ 319   5                LightTowerCtl[5].led_flash_count = GetLightTowerOnTime(5);
+ 320   5              }
+ 321   4            }
+ 322   3            //µ±Ç°ÎªÁÁµÆ
+ 323   3            else
+ 324   3            {
+ 325   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 326   4              if(LightTowerCtl[5].led_flash_count == 0)
+ 327   4              {
+ 328   5                    CNTRL6_OFF;
+ 329   5      
+ 330   5                LightTowerCtl[5].led_status_cur = OFF;
+ 331   5                LightTowerCtl[5].led_flash_count = GetLightTowerOffTime(5);
+ 332   5              }
+ 333   4            }
+ 334   3          }
+ 335   2        }
+ 336   1        else
+ 337   1        {
+ 338   2              CNTRL6_OFF;
+ 339   2        }
+ 340   1      /*********************************LED7********************************************/
+ 341   1        if(LightTowerCtl[6].led_status == ON)
+ 342   1        {
+ 343   2          //³£ÁÁ
+ 344   2          if(LightTowerCtl[6].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 345   2          {
+ 346   3                CNTRL7_ON;
+ 347   3          }
+ 348   2          //ÉÁË¸
+ 349   2          else
+ 350   2          { 
+ 351   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 352   3            if(LightTowerCtl[6].led_status_cur == OFF)
+ 353   3            {
+ 354   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 355   4              if(LightTowerCtl[6].led_flash_count == 0)
+ 356   4              {
+ 357   5                    CNTRL7_ON;
+ 358   5      
+ 359   5                LightTowerCtl[6].led_status_cur = ON;
+ 360   5                LightTowerCtl[6].led_flash_count = GetLightTowerOnTime(6);
+ 361   5              }
+ 362   4            }
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 7   
+
+ 363   3            //µ±Ç°ÎªÁÁµÆ
+ 364   3            else
+ 365   3            {
+ 366   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 367   4              if(LightTowerCtl[6].led_flash_count == 0)
+ 368   4              {
+ 369   5                    CNTRL7_OFF;
+ 370   5      
+ 371   5                LightTowerCtl[6].led_status_cur = OFF;
+ 372   5                LightTowerCtl[6].led_flash_count = GetLightTowerOffTime(6);
+ 373   5              }
+ 374   4            }
+ 375   3          }
+ 376   2        }
+ 377   1        else
+ 378   1        {
+ 379   2              CNTRL7_OFF;
+ 380   2        }
+ 381   1      /*********************************LED8********************************************/
+ 382   1        if(LightTowerCtl[7].led_status == ON)
+ 383   1        {
+ 384   2          //³£ÁÁ
+ 385   2          if(LightTowerCtl[7].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 386   2          {
+ 387   3                CNTRL8_ON;
+ 388   3          }
+ 389   2          //ÉÁË¸
+ 390   2          else
+ 391   2          { 
+ 392   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 393   3            if(LightTowerCtl[7].led_status_cur == OFF)
+ 394   3            {
+ 395   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 396   4              if(LightTowerCtl[7].led_flash_count == 0)
+ 397   4              {
+ 398   5                    CNTRL8_ON;
+ 399   5      
+ 400   5                LightTowerCtl[7].led_status_cur = ON;
+ 401   5                LightTowerCtl[7].led_flash_count = GetLightTowerOnTime(7);
+ 402   5              }
+ 403   4            }
+ 404   3            //µ±Ç°ÎªÁÁµÆ
+ 405   3            else
+ 406   3            {
+ 407   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 408   4              if(LightTowerCtl[7].led_flash_count == 0)
+ 409   4              {
+ 410   5                    CNTRL8_OFF;
+ 411   5      
+ 412   5                LightTowerCtl[7].led_status_cur = OFF;
+ 413   5                LightTowerCtl[7].led_flash_count = GetLightTowerOffTime(7);
+ 414   5              }
+ 415   4            }
+ 416   3          }
+ 417   2        }
+ 418   1        else
+ 419   1        {
+ 420   2              CNTRL8_OFF;
+ 421   2        }
+ 422   1      /*********************************LED9********************************************/
+ 423   1        if(LightTowerCtl[8].led_status == ON)
+ 424   1        {
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 8   
+
+ 425   2          //³£ÁÁ
+ 426   2          if(LightTowerCtl[8].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 427   2          {
+ 428   3                CNTRL9_ON;
+ 429   3          }
+ 430   2          //ÉÁË¸
+ 431   2          else
+ 432   2          { 
+ 433   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 434   3            if(LightTowerCtl[8].led_status_cur == OFF)
+ 435   3            {
+ 436   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 437   4              if(LightTowerCtl[8].led_flash_count == 0)
+ 438   4              {
+ 439   5                    CNTRL9_ON;
+ 440   5      
+ 441   5                LightTowerCtl[8].led_status_cur = ON;
+ 442   5                LightTowerCtl[8].led_flash_count = GetLightTowerOnTime(8);
+ 443   5              }
+ 444   4            }
+ 445   3            //µ±Ç°ÎªÁÁµÆ
+ 446   3            else
+ 447   3            {
+ 448   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 449   4              if(LightTowerCtl[8].led_flash_count == 0)
+ 450   4              {
+ 451   5                    CNTRL9_OFF;
+ 452   5      
+ 453   5                LightTowerCtl[8].led_status_cur = OFF;
+ 454   5                LightTowerCtl[8].led_flash_count = GetLightTowerOffTime(8);
+ 455   5              }
+ 456   4            }
+ 457   3          }
+ 458   2        }
+ 459   1        else
+ 460   1        {
+ 461   2              CNTRL9_OFF;
+ 462   2        }
+ 463   1      /*********************************LED10********************************************/
+ 464   1        if(LightTowerCtl[9].led_status == ON)
+ 465   1        {
+ 466   2          //³£ÁÁ
+ 467   2          if(LightTowerCtl[9].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 468   2          {
+ 469   3                CNTRL10_ON;
+ 470   3          }
+ 471   2          //ÉÁË¸
+ 472   2          else
+ 473   2          { 
+ 474   3            //µ±Ç°µÆÎªÃð×´Ì¬
+ 475   3            if(LightTowerCtl[9].led_status_cur == OFF)
+ 476   3            {
+ 477   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÁÁ×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÁÁÖÜÆÚ²ÎÊý
+ 478   4              if(LightTowerCtl[9].led_flash_count == 0)
+ 479   4              {
+ 480   5                    CNTRL10_ON;
+ 481   5      
+ 482   5                LightTowerCtl[9].led_status_cur = ON;
+ 483   5                LightTowerCtl[9].led_flash_count = GetLightTowerOnTime(9);
+ 484   5              }
+ 485   4            }
+ 486   3            //µ±Ç°ÎªÁÁµÆ
+C51 COMPILER V9.52.0.0   BEACON                                                            11/15/2016 10:54:20 PAGE 9   
+
+ 487   3            else
+ 488   3            {
+ 489   4              //µÆÃð¼ÆÊýÆ÷µ½£¬ÇÐ»»µ½µÆÃð×´Ì¬£¬²¢ÇÒÉèÖÃ¸Ä±äµÆÃðÖÜÆÚ²ÎÊý
+ 490   4              if(LightTowerCtl[9].led_flash_count == 0)
+ 491   4              {
+ 492   5                    CNTRL10_OFF;
+ 493   5      
+ 494   5                LightTowerCtl[9].led_status_cur = OFF;
+ 495   5                LightTowerCtl[9].led_flash_count = GetLightTowerOffTime(9);
+ 496   5              }
+ 497   4            }
+ 498   3          }
+ 499   2        }
+ 500   1        else
+ 501   1        {
+ 502   2              CNTRL10_OFF;
+ 503   2        }
+ 504   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1582    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     70       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,64 @@
+C51 COMPILER V9.52.0.0   COMMOM                                                            08/18/2016 09:16:15 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE COMMOM
+OBJECT MODULE PLACED IN ..\OUT\commom.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\commom.c LARGE OMF2 BROWSE INCDIR(..\SRC;..\INC;..\PRO
+                    -) DEBUG PRINT(.\commom.lst) TABS(2) OBJECT(..\OUT\commom.obj)
+
+line level    source
+
+   1          #define COMMON_GLOBAL
+   2          #include "include.h"
+   3          
+   4          ////////////////////////////////////////////////////////////////////////////////
+   5          // 功能描述 : 清除命令(地址清除时、广播清除时、显示清除时)
+   6          // 输入参数 : 
+   7          // 返回参数 : 
+   8          // 说明     :  
+   9          ////////////////////////////////////////////////////////////////////////////////
+  10          void ClearAll(void)
+  11          {
+  12   1        //显示信息清除
+  13   1        UINT8 i;
+  14   1        DispInfoCur.SRCodeLen = 0;
+  15   1        for (i=0; i<LED_NUMBER; i++)
+  16   1        {
+  17   2          led[i].num = 0;
+  18   2          led[i].show = OFF;
+  19   2        }
+  20   1        //指示灯清除
+  21   1        led_flash_NO = LED_NONE;
+  22   1        //蜂鸣器清除
+  23   1         
+  24   1        //OK信息清除
+  25   1        IsOkPressed = FALSE;
+  26   1        //扫描信息清除
+  27   1        uart232.rFlag   = OFF;
+  28   1        uart232.rIndex  = 0;
+  29   1        //灯塔清除
+  30   1        LightTowerCtl[0].led_status = OFF;
+  31   1        LightTowerCtl[1].led_status = OFF;
+  32   1        LightTowerCtl[2].led_status = OFF;
+  33   1        LightTowerCtl[3].led_status = OFF;
+  34   1        LightTowerCtl[4].led_status = OFF;
+  35   1        LightTowerCtl[5].led_status = OFF;
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     69    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

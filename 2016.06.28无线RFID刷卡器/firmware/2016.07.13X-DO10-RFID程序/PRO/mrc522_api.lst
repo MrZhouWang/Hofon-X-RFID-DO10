@@ -1,0 +1,639 @@
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MRC522_API
+OBJECT MODULE PLACED IN ..\OUT\mrc522_api.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\SRC\mrc522_api.c LARGE BROWSE INCDIR(..\INC;..\PRO;..\SRC) DEBUG OBJECTEXTEND
+                    - PRINT(.\mrc522_api.lst) OBJECT(..\OUT\mrc522_api.obj)
+
+line level    source
+
+   1          #define MRC522_API_GLOBAL
+   2          #include "include.h" 
+   3          ////////////////////////////////////////////////////////////////////////////////
+   4          // 功能描述 ：读卡里面的数据
+   5          // 输入参数 : block:要读哪一块
+   6          //                rc_au: 密码类型 0x60 A 0x61 B
+   7          //            byte_num: 读出字节个数
+   8          //            sec_key :所需密码
+   9          // 返回参数 : 无
+  10          // 说明     : 
+  11          ////////////////////////////////////////////////////////////////////////////////
+  12          void M1_Read(unsigned char rc_au,unsigned char rc_block,unsigned char byte_num,unsigned char *sec_key)
+  13          {
+  14   1           unsigned char status,i;
+  15   1               unsigned int tem;
+  16   1      
+  17   1                       status = PcdRequest(PICC_REQALL, g_ucTempbuf);//寻卡
+  18   1                   if (status == MI_OK)
+  19   1                   {   
+  20   2                           k_con=0;//一旦有卡接近就清楚无卡状态计数
+  21   2      //                       printf("卡的类型:"); 
+  22   2      //                   for(i=0;i<2;i++)
+  23   2      //                       {
+  24   2      //                          tem=g_ucTempbuf[i];
+  25   2      //                          printf("%X",tem);   
+  26   2      //                       }
+  27   2                               if(con_flag==0)
+  28   2                               {  
+  29   3                                       status = PcdAnticoll(g_ucTempbuf);//防冲撞
+  30   3                                       if (status == MI_OK)
+  31   3                                       {
+  32   4      //                                       printf("卡序列号:");   //超级终端显示,
+  33   4      //                                       for(i=0;i<4;i++)
+  34   4      //                                       {
+  35   4      //                                         tem=g_ucTempbuf[i];
+  36   4      //                                         printf("%X",tem);                    
+  37   4      //                                       }
+  38   4      //                                      printf("\n");
+  39   4                                              status = PcdSelect(g_ucTempbuf);//选定卡片
+  40   4                                              if (status == MI_OK)
+  41   4                                              {
+  42   5                                                  status = PcdAuthState(rc_au, rc_block, sec_key, g_ucTempbuf);//验证卡片密码
+  43   5                                                      if (status == MI_OK)
+  44   5                                                      {
+  45   6                                                         status = PcdRead(rc_block, g_ucTempbuf);//读块
+  46   6                                                         if (status == MI_OK) 
+  47   6                                                         {
+  48   7      //                                                         printf("中华人民军队工号：");        //超级终端显示, 
+  49   7      //                                                         for(i=0;i<byte_num;i++)
+  50   7      //                                                         {
+  51   7      //                                                            tem=g_ucTempbuf[i];
+  52   7      //                                                        printf("%X",tem);
+  53   7      //                                                                      
+  54   7      //                                                 }
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 2   
+
+  55   7      //                                                         printf("\n");
+  56   7                                                         led_blink();                                                  
+  57   7                                                         PcdHalt();
+  58   7                                                         con_flag=1;
+  59   7                                                                 led_blink(); 
+  60   7                                                               //  break;
+  61   7                                                         }
+  62   6                                                      }       
+  63   5                                              }
+  64   4                                       }
+  65   3                               }
+  66   2                   }
+  67   1                       else
+  68   1                       {
+  69   2      
+  70   2                              k_con++;
+  71   2      //                      if(k_con==1)
+  72   2      //                      {
+  73   2      //                         PcdReset();
+  74   2      //               PcdAntennaOff(); 
+  75   2      //                         DelayMs(1);
+  76   2      //               PcdAntennaOn();        
+  77   2      //                         DelayMs(1);
+  78   2      //                      }
+  79   2                              if( k_con> MAX_K_CON)
+  80   2                              {
+  81   3                                      k_con= MAX_K_CON;
+  82   3                                      con_flag=0;
+  83   3                              }
+  84   2                       }
+  85   1                              
+  86   1             
+  87   1      }          
+*** WARNING C280 IN LINE 12 OF ..\SRC\MRC522_API.C: 'byte_num': unreferenced local variable
+*** WARNING C280 IN LINE 14 OF ..\SRC\MRC522_API.C: 'i': unreferenced local variable
+*** WARNING C280 IN LINE 15 OF ..\SRC\MRC522_API.C: 'tem': unreferenced local variable
+  88          //////////////////// ////////////////////////////////////////////////////////////
+  89          // 功能描述 : 寻卡
+  90          // 输入参数 : req_code[IN]:寻卡方式
+  91          //                0x52 = 寻感应区内所有符合14443A标准的卡
+  92          //                0x26 = 寻未进入休眠状态的卡
+  93          //            pTagType[OUT]：卡片类型代码
+  94          //                0x4400 = Mifare_UltraLight
+  95          //                0x0400 = Mifare_One(S50)
+  96          //                0x0200 = Mifare_One(S70)
+  97          //                0x0800 = Mifare_Pro(X)
+  98          //                0x4403 = Mifare_DESFire
+  99          // 返回参数 : 成功返回MI_OK
+ 100          // 说明     :       
+ 101          ////////////////////////////////////////////////////////////////////////////////
+ 102          char PcdRequest(unsigned char req_code,unsigned char *pTagType)
+ 103          {
+ 104   1         char status;  
+ 105   1         unsigned int  unLen;
+ 106   1         unsigned char ucComMF522Buf[MAXRLEN]; 
+ 107   1      
+ 108   1         ClearBitMask(Status2Reg,0x08);
+ 109   1         WriteRawRC(BitFramingReg,0x07);
+ 110   1         SetBitMask(TxControlReg,0x03);
+ 111   1       
+ 112   1         ucComMF522Buf[0] = req_code;
+ 113   1      
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 3   
+
+ 114   1         status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,1,ucComMF522Buf,&unLen);
+ 115   1         
+ 116   1         if ((status == MI_OK) && (unLen == 0x10))
+ 117   1         {    
+ 118   2             *pTagType     = ucComMF522Buf[0];
+ 119   2             *(pTagType+1) = ucComMF522Buf[1];
+ 120   2         }
+ 121   1         else
+ 122   1         {   status = MI_ERR;  
+ 123   2       
+ 124   2      
+ 125   2      
+ 126   2              }
+ 127   1         
+ 128   1         return status;
+ 129   1      }
+ 130          ////////////////////////////////////////////////////////////////////////////////
+ 131          // 功能描述 : 防冲撞 
+ 132          // 输入参数 : pSnr[OUT]:卡片序列号，4字节
+ 133          // 返回参数 : 成功返回MI_OK
+ 134          // 说明     :       
+ 135          //////////////////////////////////////////////////////////////////////////////// 
+ 136          char PcdAnticoll(unsigned char *pSnr)
+ 137          {
+ 138   1          char status;
+ 139   1          unsigned char i,snr_check=0;
+ 140   1          unsigned int  unLen;
+ 141   1          unsigned char ucComMF522Buf[MAXRLEN]; 
+ 142   1          
+ 143   1      
+ 144   1          ClearBitMask(Status2Reg,0x08);
+ 145   1          WriteRawRC(BitFramingReg,0x00);
+ 146   1          ClearBitMask(CollReg,0x80);
+ 147   1       
+ 148   1          ucComMF522Buf[0] = PICC_ANTICOLL1;
+ 149   1          ucComMF522Buf[1] = 0x20;
+ 150   1      
+ 151   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,2,ucComMF522Buf,&unLen);
+ 152   1      
+ 153   1          if (status == MI_OK)
+ 154   1          {
+ 155   2               for (i=0; i<4; i++)
+ 156   2               {   
+ 157   3                   *(pSnr+i)  = ucComMF522Buf[i];
+ 158   3                   snr_check ^= ucComMF522Buf[i];
+ 159   3      
+ 160   3               }
+ 161   2               if (snr_check != ucComMF522Buf[i])
+ 162   2               {   status = MI_ERR;    }
+ 163   2          }
+ 164   1          
+ 165   1          SetBitMask(CollReg,0x80);
+ 166   1          return status;
+ 167   1      }
+ 168          ////////////////////////////////////////////////////////////////////////////////
+ 169          // 功能描述 : 选定卡片
+ 170          // 输入参数 : pSnr[IN]:卡片序列号，4字节
+ 171          // 返回参数 : 成功选定卡片返回MI_OK
+ 172          // 说明     :       
+ 173          ////////////////////////////////////////////////////////////////////////////////
+ 174          char PcdSelect(unsigned char *pSnr)
+ 175          {
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 4   
+
+ 176   1          char status;
+ 177   1          unsigned char i;
+ 178   1          unsigned int  unLen;
+ 179   1          unsigned char ucComMF522Buf[MAXRLEN]; 
+ 180   1          
+ 181   1          ucComMF522Buf[0] = PICC_ANTICOLL1;
+ 182   1          ucComMF522Buf[1] = 0x70;
+ 183   1          ucComMF522Buf[6] = 0;
+ 184   1          for (i=0; i<4; i++)
+ 185   1          {
+ 186   2              ucComMF522Buf[i+2] = *(pSnr+i);
+ 187   2              ucComMF522Buf[6]  ^= *(pSnr+i);
+ 188   2          }
+ 189   1          CalulateCRC(ucComMF522Buf,7,&ucComMF522Buf[7]);
+ 190   1        
+ 191   1          ClearBitMask(Status2Reg,0x08);
+ 192   1      
+ 193   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,9,ucComMF522Buf,&unLen);
+ 194   1          
+ 195   1          if ((status == MI_OK) && (unLen == 0x18))
+ 196   1          {   status = MI_OK;  }
+ 197   1          else
+ 198   1          {   status = MI_ERR;    }
+ 199   1      
+ 200   1          return status;
+ 201   1      }     
+ 202          ////////////////////////////////////////////////////////////////////////////////
+ 203          // 功能描述 : 命令卡片进入休眠状态 
+ 204          // 输入参数 : auth_mode[IN]: 密码验证模式
+ 205          //                 0x60 = 验证A密钥
+ 206          //                 0x61 = 验证B密钥 
+ 207          //            addr[IN]：块地址
+ 208          //            pKey[IN]：密码
+ 209          //            pSnr[IN]：卡片序列号，4字节
+ 210          // 返回参数 : 成功返回MI_OK
+ 211          // 说明     :       
+ 212          ////////////////////////////////////////////////////////////////////////////////         
+ 213          char PcdAuthState(unsigned char auth_mode,unsigned char addr,unsigned char *pKey,unsigned char *pSnr)
+ 214          {
+ 215   1          char status;
+ 216   1          unsigned int  unLen;
+ 217   1          unsigned char i,ucComMF522Buf[MAXRLEN]; 
+ 218   1      
+ 219   1          ucComMF522Buf[0] = auth_mode;
+ 220   1          ucComMF522Buf[1] = addr;
+ 221   1          for (i=0; i<6; i++)
+ 222   1          {    ucComMF522Buf[i+2] = *(pKey+i);   }
+ 223   1          for (i=0; i<6; i++)
+ 224   1          {    ucComMF522Buf[i+8] = *(pSnr+i);   }
+ 225   1       //   memcpy(&ucComMF522Buf[2], pKey, 6); 
+ 226   1       //   memcpy(&ucComMF522Buf[8], pSnr, 4); 
+ 227   1          
+ 228   1          status = PcdComMF522(PCD_AUTHENT,ucComMF522Buf,12,ucComMF522Buf,&unLen);
+ 229   1          if ((status != MI_OK) || (!(ReadRawRC(Status2Reg) & 0x08)))
+ 230   1          {   status = MI_ERR;   }
+ 231   1          
+ 232   1          return status;
+ 233   1      }
+ 234          ////////////////////////////////////////////////////////////////////////////////
+ 235          // 功能描述 : 读取M1卡一块数据 
+ 236          // 输入参数 : addr[IN]：块地址
+ 237          //            pData[OUT]：读出的数据，16字节
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 5   
+
+ 238          // 返回参数 : 成功返回MI_OK
+ 239          // 说明     :       
+ 240          ////////////////////////////////////////////////////////////////////////////////
+ 241          char PcdRead(unsigned char addr,unsigned char *pData)
+ 242          {
+ 243   1          char status;
+ 244   1          unsigned int  unLen;
+ 245   1          unsigned char i,ucComMF522Buf[MAXRLEN]; 
+ 246   1      
+ 247   1          ucComMF522Buf[0] = PICC_READ;
+ 248   1          ucComMF522Buf[1] = addr;
+ 249   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 250   1         
+ 251   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 252   1          if ((status == MI_OK) && (unLen == 0x90))
+ 253   1       //   {   memcpy(pData, ucComMF522Buf, 16);   }
+ 254   1          {
+ 255   2              for (i=0; i<16; i++)
+ 256   2              {    *(pData+i) = ucComMF522Buf[i];   }
+ 257   2          }
+ 258   1          else
+ 259   1          {   status = MI_ERR;   }
+ 260   1          
+ 261   1          return status;
+ 262   1      }   
+ 263          ////////////////////////////////////////////////////////////////////////////////
+ 264          // 功能描述 : 写数据到M1卡一块
+ 265          // 输入参数 : addr[IN]：块地址
+ 266          //            pData[IN]：写入的数据，16字节
+ 267          // 返回参数 : 成功返回MI_OK
+ 268          // 说明     :       
+ 269          ////////////////////////////////////////////////////////////////////////////////            
+ 270          char PcdWrite(unsigned char addr,unsigned char *pData)
+ 271          {
+ 272   1          char status;
+ 273   1          unsigned int  unLen;
+ 274   1          unsigned char i,ucComMF522Buf[MAXRLEN]; 
+ 275   1          
+ 276   1          ucComMF522Buf[0] = PICC_WRITE;
+ 277   1          ucComMF522Buf[1] = addr;
+ 278   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 279   1       
+ 280   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 281   1      
+ 282   1          if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 283   1          {   status = MI_ERR;   }
+ 284   1              
+ 285   1          if (status == MI_OK)
+ 286   1          {
+ 287   2              //memcpy(ucComMF522Buf, pData, 16);
+ 288   2              for (i=0; i<16; i++)
+ 289   2              {    ucComMF522Buf[i] = *(pData+i);   }
+ 290   2              CalulateCRC(ucComMF522Buf,16,&ucComMF522Buf[16]);
+ 291   2      
+ 292   2              status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,18,ucComMF522Buf,&unLen);
+ 293   2              if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 294   2              {   status = MI_ERR;   }
+ 295   2          }
+ 296   1          
+ 297   1          return status;
+ 298   1      } 
+ 299          ////////////////////////////////////////////////////////////////////////////////
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 6   
+
+ 300          // 功能描述 : 扣款和充值
+ 301          // 输入参数 : dd_mode[IN]：命令字
+ 302          //               0xC0 = 扣款
+ 303          //               0xC1 = 充值
+ 304          //            addr[IN]：钱包地址
+ 305          //            pValue[IN]：4字节增(减)值，低位在前
+ 306          // 返回参数 : 成功返回MI_OK
+ 307          // 说明     :       
+ 308          ////////////////////////////////////////////////////////////////////////////////           
+ 309          char PcdValue(unsigned char dd_mode,unsigned char addr,unsigned char *pValue)
+ 310          {
+ 311   1          char status;
+ 312   1          unsigned int  unLen;
+ 313   1          unsigned char i,ucComMF522Buf[MAXRLEN]; 
+ 314   1          
+ 315   1          ucComMF522Buf[0] = dd_mode;
+ 316   1          ucComMF522Buf[1] = addr;
+ 317   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 318   1       
+ 319   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 320   1      
+ 321   1          if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 322   1          {   status = MI_ERR;   }
+ 323   1              
+ 324   1          if (status == MI_OK)
+ 325   1          {
+ 326   2             // memcpy(ucComMF522Buf, pValue, 4);
+ 327   2              for (i=0; i<16; i++)
+ 328   2              {    ucComMF522Buf[i] = *(pValue+i);   }
+ 329   2              CalulateCRC(ucComMF522Buf,4,&ucComMF522Buf[4]);
+ 330   2              unLen = 0;
+ 331   2              status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,6,ucComMF522Buf,&unLen);
+ 332   2              if (status != MI_ERR)
+ 333   2              {    status = MI_OK;    }
+ 334   2          }
+ 335   1          
+ 336   1          if (status == MI_OK)
+ 337   1          {
+ 338   2              ucComMF522Buf[0] = PICC_TRANSFER;
+ 339   2              ucComMF522Buf[1] = addr;
+ 340   2              CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]); 
+ 341   2         
+ 342   2              status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 343   2      
+ 344   2              if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 345   2              {   status = MI_ERR;   }
+ 346   2          }
+ 347   1          return status;
+ 348   1      }
+ 349          ////////////////////////////////////////////////////////////////////////////////
+ 350          // 功能描述 : 备份钱包
+ 351          // 输入参数 : sourceaddr[IN]：源地址    goaladdr[IN]：目标地址           
+ 352          // 返回参数 : 成功返回MI_OK
+ 353          // 说明     :       
+ 354          ////////////////////////////////////////////////////////////////////////////////
+ 355          char PcdBakValue(unsigned char sourceaddr, unsigned char goaladdr)
+ 356          {
+ 357   1          char status;
+ 358   1          unsigned int  unLen;
+ 359   1          unsigned char ucComMF522Buf[MAXRLEN]; 
+ 360   1      
+ 361   1          ucComMF522Buf[0] = PICC_RESTORE;
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 7   
+
+ 362   1          ucComMF522Buf[1] = sourceaddr;
+ 363   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 364   1       
+ 365   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 366   1      
+ 367   1          if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 368   1          {   status = MI_ERR;   }
+ 369   1          
+ 370   1          if (status == MI_OK)
+ 371   1          {
+ 372   2              ucComMF522Buf[0] = 0;
+ 373   2              ucComMF522Buf[1] = 0;
+ 374   2              ucComMF522Buf[2] = 0;
+ 375   2              ucComMF522Buf[3] = 0;
+ 376   2              CalulateCRC(ucComMF522Buf,4,&ucComMF522Buf[4]);
+ 377   2       
+ 378   2              status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,6,ucComMF522Buf,&unLen);
+ 379   2              if (status != MI_ERR)
+ 380   2              {    status = MI_OK;    }
+ 381   2          }
+ 382   1          
+ 383   1          if (status != MI_OK)
+ 384   1          {    return MI_ERR;   }
+ 385   1          
+ 386   1          ucComMF522Buf[0] = PICC_TRANSFER;
+ 387   1          ucComMF522Buf[1] = goaladdr;
+ 388   1      
+ 389   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 390   1       
+ 391   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 392   1      
+ 393   1          if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
+ 394   1          {   status = MI_ERR;   }
+ 395   1      
+ 396   1          return status;
+ 397   1      }
+ 398          ////////////////////////////////////////////////////////////////////////////////
+ 399          // 功能描述 : 命令卡片进入休眠状态 
+ 400          // 输入参数 : 
+ 401          // 返回参数 : 成功返回MI_OK
+ 402          // 说明     :       
+ 403          ////////////////////////////////////////////////////////////////////////////////
+ 404          char PcdHalt(void)
+ 405          {
+ 406   1          char status;
+ 407   1          unsigned int  unLen;
+ 408   1          unsigned char ucComMF522Buf[MAXRLEN]; 
+ 409   1      
+ 410   1          ucComMF522Buf[0] = PICC_HALT;
+ 411   1          ucComMF522Buf[1] = 0;
+ 412   1          CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
+ 413   1       
+ 414   1          status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
+ 415   1      
+ 416   1          return MI_OK;
+ 417   1      }
+ 418          ////////////////////////////////////////////////////////////////////////////////
+ 419          // 功能描述 : 用MF522计算CRC16函数 
+ 420          // 输入参数 : 
+ 421          // 返回参数 : 
+ 422          // 说明     :       
+ 423          ////////////////////////////////////////////////////////////////////////////////
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 8   
+
+ 424          void CalulateCRC(unsigned char *pIndata,unsigned char len,unsigned char *pOutData)
+ 425          {
+ 426   1          unsigned char i,n;
+ 427   1          ClearBitMask(DivIrqReg,0x04);
+ 428   1          WriteRawRC(CommandReg,PCD_IDLE);
+ 429   1          SetBitMask(FIFOLevelReg,0x80);
+ 430   1          for (i=0; i<len; i++)
+ 431   1          {   WriteRawRC(FIFODataReg, *(pIndata+i));   }
+ 432   1          WriteRawRC(CommandReg, PCD_CALCCRC);
+ 433   1          i = 0xFF;
+ 434   1          do 
+ 435   1          {
+ 436   2              n = ReadRawRC(DivIrqReg);
+ 437   2              i--;
+ 438   2          }
+ 439   1          while ((i!=0) && !(n&0x04));
+ 440   1          pOutData[0] = ReadRawRC(CRCResultRegL);
+ 441   1          pOutData[1] = ReadRawRC(CRCResultRegM);
+ 442   1      }
+ 443          ////////////////////////////////////////////////////////////////////////////////
+ 444          // 功能描述 : 复位RC522 
+ 445          // 输入参数 : 
+ 446          // 返回参数 : 成功返回MI_OK
+ 447          // 说明     :       
+ 448          ////////////////////////////////////////////////////////////////////////////////
+ 449          char PcdReset(void)
+ 450          {
+ 451   1              unsigned char i;
+ 452   1          MF522_RST=1;
+ 453   1      
+ 454   1                      _nop_();                  
+ 455   1      
+ 456   1          MF522_RST=0;
+ 457   1      
+ 458   1                      _nop_();                   
+ 459   1      
+ 460   1          MF522_RST=1;
+ 461   1      
+ 462   1                      DelayMs(1);               
+ 463   1              
+ 464   1          WriteRawRC(CommandReg,PCD_RESETPHASE);
+ 465   1      
+ 466   1                      _nop_();                  
+ 467   1              
+ 468   1          
+ 469   1          WriteRawRC(ModeReg,0x3D);            //和Mifare卡通讯，CRC初始值0x6363
+ 470   1          WriteRawRC(TReloadRegL,30);           
+ 471   1          WriteRawRC(TReloadRegH,0);
+ 472   1          WriteRawRC(TModeReg,0x8D);
+ 473   1          WriteRawRC(TPrescalerReg,0x3E);
+ 474   1          WriteRawRC(TxAutoReg,0x40);
+ 475   1              i=ReadRawRC(TReloadRegL);
+ 476   1              //while((i!=30));
+ 477   1          return MI_OK;
+ 478   1      }
+ 479          ////////////////////////////////////////////////////////////////////////////////
+ 480          // 功能描述 : 通过RC522和ISO14443卡通讯
+ 481          // 输入参数 : 
+ 482          // 返回参数 : 
+ 483          // 说明     : Command[IN]:RC522命令字
+ 484          //            pInData[IN]:通过RC522发送到卡片的数据
+ 485          //            InLenByte[IN]:发送数据的字节长度
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 9   
+
+ 486          //                pOutData[OUT]:接收到的卡片返回数据
+ 487          //            *pOutLenBit[OUT]:返回数据的位长度      
+ 488          ////////////////////////////////////////////////////////////////////////////////
+ 489          char PcdComMF522(unsigned char Command, 
+ 490                           unsigned char *pInData, 
+ 491                           unsigned char InLenByte,
+ 492                           unsigned char *pOutData, 
+ 493                           unsigned int  *pOutLenBit)
+ 494          {
+ 495   1          char status = MI_ERR;
+ 496   1          unsigned char irqEn   = 0x00;
+ 497   1          unsigned char waitFor = 0x00;
+ 498   1          unsigned char lastBits;
+ 499   1          unsigned char n;
+ 500   1          unsigned int i;
+ 501   1          switch (Command)
+ 502   1          {
+ 503   2             case PCD_AUTHENT:
+ 504   2                irqEn   = 0x12;
+ 505   2                waitFor = 0x10;
+ 506   2                break;
+ 507   2             case PCD_TRANSCEIVE:
+ 508   2                irqEn   = 0x77;
+ 509   2                waitFor = 0x30;
+ 510   2                break;
+ 511   2             default:
+ 512   2               break;
+ 513   2          }
+ 514   1         
+ 515   1          WriteRawRC(ComIEnReg,irqEn|0x80);
+ 516   1          ClearBitMask(ComIrqReg,0x80);
+ 517   1          WriteRawRC(CommandReg,PCD_IDLE);
+ 518   1          SetBitMask(FIFOLevelReg,0x80);
+ 519   1          
+ 520   1          for (i=0; i<InLenByte; i++)
+ 521   1          {   WriteRawRC(FIFODataReg, pInData[i]);    }
+ 522   1          WriteRawRC(CommandReg, Command);
+ 523   1         
+ 524   1          
+ 525   1          if (Command == PCD_TRANSCEIVE)
+ 526   1          {    SetBitMask(BitFramingReg,0x80);  }
+ 527   1          
+ 528   1          i = 600;//根据时钟频率调整，操作M1卡最大等待时间25ms
+ 529   1          do 
+ 530   1          {
+ 531   2               n = ReadRawRC(ComIrqReg);
+ 532   2               i--;
+ 533   2          }
+ 534   1          while ((i!=0) && !(n&0x01) && !(n&waitFor));
+ 535   1          ClearBitMask(BitFramingReg,0x80);
+ 536   1                    
+ 537   1          if (i!=0)
+ 538   1          {    
+ 539   2               if(!(ReadRawRC(ErrorReg)&0x1B))
+ 540   2               {
+ 541   3                   status = MI_OK;
+ 542   3                   if (n & irqEn & 0x01)
+ 543   3                   {   status = MI_NOTAGERR;   }
+ 544   3                   if (Command == PCD_TRANSCEIVE)
+ 545   3                   {
+ 546   4                      n = ReadRawRC(FIFOLevelReg);
+ 547   4                      lastBits = ReadRawRC(ControlReg) & 0x07;
+C51 COMPILER V9.00   MRC522_API                                                            07/15/2016 17:46:18 PAGE 10  
+
+ 548   4                      if (lastBits)
+ 549   4                      {   *pOutLenBit = (n-1)*8 + lastBits;   }
+ 550   4                      else
+ 551   4                      {   *pOutLenBit = n*8;   }
+ 552   4                      if (n == 0)
+ 553   4                      {   n = 1;    }
+ 554   4                      if (n > MAXRLEN)
+ 555   4                      {   n = MAXRLEN;   }
+ 556   4                      for (i=0; i<n; i++)
+ 557   4                      {   pOutData[i] = ReadRawRC(FIFODataReg);    }
+ 558   4                  }
+ 559   3               }
+ 560   2               else
+ 561   2               {   status = MI_ERR;   }
+ 562   2              
+ 563   2         }
+ 564   1         
+ 565   1      
+ 566   1         SetBitMask(ControlReg,0x80);           // stop timer now
+ 567   1         WriteRawRC(CommandReg,PCD_IDLE); 
+ 568   1         return status;
+ 569   1      }
+ 570          ////////////////////////////////////////////////////////////////////////////////
+ 571          // 功能描述 : 开启天线  
+ 572          // 输入参数 : 
+ 573          // 返回参数 : 
+ 574          // 说明     : 每次启动或关闭天险发射之间应至少有1ms的间隔      
+ 575          ////////////////////////////////////////////////////////////////////////////////
+ 576          void PcdAntennaOn()
+ 577          {
+ 578   1          unsigned char i;
+ 579   1          i = ReadRawRC(TxControlReg);
+ 580   1          if (!(i & 0x03))
+ 581   1          {
+ 582   2              SetBitMask(TxControlReg, 0x03);
+ 583   2          }
+ 584   1      }
+ 585          ////////////////////////////////////////////////////////////////////////////////
+ 586          // 功能描述 : 关闭天线 
+ 587          // 输入参数 : 
+ 588          // 返回参数 : 
+ 589          // 说明     :       
+ 590          ////////////////////////////////////////////////////////////////////////////////
+ 591          void PcdAntennaOff()
+ 592          {
+ 593   1          ClearBitMask(TxControlReg, 0x03);
+ 594   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2640    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      3     248
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,12 @@
+08:36:23.020
+XConverter 已停止，端口：COM7。
+08:38:03.122
+XConverter 已停止，端口：COM7。
+08:39:55.662
+XConverter 已停止，端口：COM7。
+08:46:10.899
+XConverter 已停止，端口：COM7。
+10:35:48.679
+XConverter 已停止，端口：COM7。
+11:53:16.158
+XConverter 已停止，端口：COM7。

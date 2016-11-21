@@ -1,0 +1,57 @@
+C51 COMPILER V9.00   DELAY                                                                 07/20/2016 13:38:27 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN ..\OUT\delay.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\SRC\delay.c LARGE BROWSE INCDIR(..\INC;..\PRO;..\SRC) DEBUG OBJECTEXTEND PRIN
+                    -T(.\delay.lst) OBJECT(..\OUT\delay.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          
+   3          ////////////////////////////////////////////////////////////////////////////////
+   4          // 功能描述 : 1毫秒延时
+   5          // 输入参数 : 
+   6          // 返回参数 : 
+   7          // 说明     :  
+   8          ////////////////////////////////////////////////////////////////////////////////
+   9          void Delay1Ms() 
+  10          {
+  11   1              unsigned char i, j;
+  12   1      
+  13   1              _nop_();
+  14   1              i = 11;
+  15   1              j = 190;
+  16   1              do
+  17   1              {
+  18   2                      while (--j);
+  19   2              } while (--i);
+  20   1      }
+  21          ////////////////////////////////////////////////////////////////////////////////
+  22          // 功能描述 : 毫秒延时
+  23          // 输入参数 : 
+  24          // 返回参数 : 
+  25          // 说明     :  
+  26          ////////////////////////////////////////////////////////////////////////////////
+  27          void DelayMs(UINT16 usDelay)
+  28          {
+  29   1          for(; usDelay>0; usDelay--)
+  30   1          {
+  31   2              Delay1Ms();
+  32   2          }   
+  33   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     34    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

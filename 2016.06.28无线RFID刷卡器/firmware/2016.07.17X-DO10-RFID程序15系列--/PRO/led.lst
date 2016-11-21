@@ -1,0 +1,238 @@
+C51 COMPILER V9.00   LED                                                                   07/20/2016 15:45:34 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN ..\OUT\led.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\SRC\led.c LARGE BROWSE INCDIR(..\INC;..\PRO;..\SRC) DEBUG OBJECTEXTEND PRINT(
+                    -.\led.lst) OBJECT(..\OUT\led.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          UINT8 address[3];
+   3          UINT8 baudrate;
+   4          UINT8 ucAddr[3];                        //备份地址
+   5          UINT8 ucBaud;                           //备份波特率
+   6          
+   7          UINT8 FinishedLED = LED_NONE;                   //拣货完成后，清零前，指示灯亮的颜色
+   8          UINT8 WtTime = 5;                                               //一对多应用时，进度条等待时间
+   9          UINT8 FnDefine = 0;                                             //Fn功能键定义  0-零拣货        1-满箱
+  10          UINT8 DispMode = 0;                                             //显示模式      0-任务模式      1-区域信息模式
+  11          
+  12          
+  13          ///////////////////////////////////////////////////////////////////////////////
+  14          
+  15          
+  16          //获取灯亮时间，单位ms
+  17          UINT16 GetLedOnTime()
+  18          {
+  19   1              UINT16 unRet = led_flash_period;
+  20   1              switch(led_flash_mode)
+  21   1              {
+  22   2              case 0:                                         //常亮模式，不会调用此函数
+  23   2                      break;                  
+  24   2              case 1:
+  25   2                      unRet = led_flash_period/2;
+  26   2                      break;
+  27   2              case 2:
+  28   2                      unRet = led_flash_period/3;
+  29   2                      break;
+  30   2              case 3:
+  31   2                      unRet = led_flash_period/6;
+  32   2                      break;
+  33   2              case 4:
+  34   2                      unRet = led_flash_period/11;
+  35   2                      break;
+  36   2              case 5:
+  37   2                      unRet = led_flash_period/3*2;
+  38   2                      break;
+  39   2              case 6:
+  40   2                      unRet = led_flash_period/6*5;
+  41   2                      break;
+  42   2              case 7:
+  43   2                      unRet = led_flash_period/11*10;
+  44   2                      break;
+  45   2              default:
+  46   2                      break;
+  47   2              }
+  48   1              return unRet;
+  49   1      }
+  50          //获取灯灭时间，单位ms
+  51          UINT16 GetLedOffTime()
+  52          {
+  53   1              UINT16 unRet = led_flash_period;
+  54   1              switch(led_flash_mode)
+C51 COMPILER V9.00   LED                                                                   07/20/2016 15:45:34 PAGE 2   
+
+  55   1              {
+  56   2              case 0:                                    //常亮模式，不会调用此函数
+  57   2                      break;                          
+  58   2              case 1:
+  59   2                      unRet = led_flash_period/2;
+  60   2                      break;
+  61   2              case 5:
+  62   2                      unRet = led_flash_period/3;
+  63   2                      break;
+  64   2              case 6:
+  65   2                      unRet = led_flash_period/6;
+  66   2                      break;
+  67   2              case 7:
+  68   2                      unRet = led_flash_period/11;
+  69   2                      break;
+  70   2              case 2:
+  71   2                      unRet = led_flash_period/3*2;
+  72   2                      break;
+  73   2              case 3:
+  74   2                      unRet = led_flash_period/6*5;
+  75   2                      break;
+  76   2              case 4:
+  77   2                      unRet = led_flash_period/11*10;
+  78   2                      break;
+  79   2              default:
+  80   2                      break;
+  81   2              }
+  82   1              return unRet;
+  83   1      }
+  84          //**********************RGB点亮及闪烁控制***************************
+  85          void CMD_led_flash(void)
+  86          {
+  87   1              if(RC522_rFlag == ON)
+  88   1              {
+  89   2                      led_light_ctrl(LED_GREEN);                      // 仅点亮绿色
+  90   2                      return;
+  91   2              }
+  92   1              if(led_flash_NO != LED_NONE)
+  93   1          {
+  94   2      
+  95   2      
+  96   2                      if(led_flash_mode == LED_FLASH_MODE_ALWAYS)     //常亮显示
+  97   2                      {
+  98   3                              led_light_ctrl(led_flash_NO);                   // 仅点亮对应颜色
+  99   3                      }
+ 100   2                      else//闪烁显示
+ 101   2                      {
+ 102   3                              //当前灯为灭状态
+ 103   3                              if(led_flash_status == 0)
+ 104   3                              {
+ 105   4                                      //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 106   4                                      if(sys.led_flash_count == 0)
+ 107   4                                      {
+ 108   5                                              led_light_ctrl(led_flash_NO);                   // 仅点亮对应颜色
+ 109   5                                              led_flash_status = 1;   //切换到灯亮状态
+ 110   5                                              sys.led_flash_count = GetLedOnTime();
+ 111   5                                      }
+ 112   4                              }
+ 113   3                              //当前为亮灯
+ 114   3                              else
+ 115   3                              {
+ 116   4                                      //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+C51 COMPILER V9.00   LED                                                                   07/20/2016 15:45:34 PAGE 3   
+
+ 117   4                                      if(sys.led_flash_count == 0)
+ 118   4                                      {
+ 119   5                                              led_light_ctrl(LED_NONE);
+ 120   5                                              led_flash_status = 0;   //切换到灯亮状态
+ 121   5                                              sys.led_flash_count = GetLedOffTime();
+ 122   5                                      }
+ 123   4                              }
+ 124   3                      }
+ 125   2              }
+ 126   1              else//当前不显示
+ 127   1              {
+ 128   2                      led_light_ctrl(LED_NONE);       
+ 129   2              }
+ 130   1      }
+ 131          /*******************************************************************************
+ 132                                      给当前显示led供电            
+ 133              Input :      UINT8 ucValue   //LED_RED, LED_GREEN, LED_BLUE 
+ 134              Output:  None       
+ 135          *******************************************************************************/
+ 136          void led_light_ctrl(UINT8 ucValue)
+ 137          {
+ 138   1              switch (ucValue)
+ 139   1              {
+ 140   2                      case LED_RED:           LED_G_OFF; LED_B_OFF;  LED_R_ON;  break;                
+ 141   2                      case LED_GREEN:         LED_R_OFF; LED_B_OFF;  LED_G_ON;  break;
+ 142   2                      case LED_BLUE:          LED_R_OFF; LED_G_OFF;  LED_B_ON;  break;
+ 143   2                      
+ 144   2                      case LED_RG:            LED_B_OFF; LED_R_ON;   LED_G_ON;  break;                
+ 145   2                      case LED_RB:            LED_G_OFF; LED_R_ON;   LED_B_ON;  break;
+ 146   2                      case LED_GB:            LED_R_OFF; LED_G_ON;   LED_B_ON;  break;
+ 147   2                      case LED_RGB:           LED_R_ON;  LED_G_ON;   LED_B_ON;  break;                        
+ 148   2                      default:                        LED_R_OFF; LED_G_OFF; LED_B_OFF;break;
+ 149   2              }
+ 150   1      }
+ 151          
+ 152          
+ 153          //清除命令(地址清除时、广播清除时、显示清除时)
+ 154          void Display_Clear(void)
+ 155          {
+ 156   1              //指示灯清除
+ 157   1              led_flash_NO = LED_NONE;
+ 158   1              //蜂鸣器清除
+ 159   1              BEEP_OFF;
+ 160   1      }
+ 161          /*******************************************************************************
+ 162                                                          开机自检测程序
+ 163              input:   none     
+ 164              output:  none
+ 165          *******************************************************************************/ 
+ 166          void led_on()
+ 167          {
+ 168   1      //      LED_R_ON;
+ 169   1      //      LED_G_ON;
+ 170   1          LED_B_ON;
+ 171   1      }
+ 172          ////////////////////////////////////////////////////////////////////////////////
+ 173          // 功能描述 : LED亮 
+ 174          // 输入参数 : 无
+ 175          // 返回参数 : 无
+ 176          // 说明     :
+ 177          ////////////////////////////////////////////////////////////////////////////////
+ 178          void led_off()
+C51 COMPILER V9.00   LED                                                                   07/20/2016 15:45:34 PAGE 4   
+
+ 179          {
+ 180   1              LED_R_OFF;
+ 181   1              LED_G_OFF;
+ 182   1          LED_B_OFF;
+ 183   1      }
+ 184          ////////////////////////////////////////////////////////////////////////////////
+ 185          // 功能描述 : LED闪烁 
+ 186          // 输入参数 : 无
+ 187          // 返回参数 : 无
+ 188          // 说明     :
+ 189          ////////////////////////////////////////////////////////////////////////////////
+ 190          void led_blink()
+ 191          {
+ 192   1              led_on();
+ 193   1              DelayMs(30);
+ 194   1              led_off();
+ 195   1              DelayMs(35);
+ 196   1              led_on();
+ 197   1              DelayMs(30);
+ 198   1              led_off();
+ 199   1              DelayMs(25);
+ 200   1              led_on();
+ 201   1              DelayMs(30);
+ 202   1              led_off();
+ 203   1              DelayMs(25);
+ 204   1      }
+ 205          /*******************************************************************************
+ 206                                                                          END                                     
+ 207          *******************************************************************************/
+ 208          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    655    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     12    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

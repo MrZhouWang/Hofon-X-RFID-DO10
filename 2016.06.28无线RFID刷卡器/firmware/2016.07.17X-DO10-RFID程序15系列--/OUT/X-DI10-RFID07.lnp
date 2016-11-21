@@ -1,0 +1,18 @@
+"..\OUT\STARTUP.obj",
+"..\OUT\crc.obj",
+"..\OUT\eeprom.obj",
+"..\OUT\key.obj",
+"..\OUT\led.obj",
+"..\OUT\main.obj",
+"..\OUT\process.obj",
+"..\OUT\uart.obj",
+"..\OUT\timer.obj",
+"..\OUT\delay.obj",
+"..\OUT\init.obj",
+"..\OUT\commom.obj",
+"..\OUT\mrc522_api.obj",
+"..\OUT\mrc522_hal.obj",
+"..\OUT\led_display.obj",
+"..\OUT\beacon.obj" 
+TO "..\OUT\X-DI10-RFID07.11" 
+PRINT(".\X-DI10-RFID07.m51") RAMSIZE(256) 

@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\公司项目\2016.06.28无线RFID刷卡器\firmware\2016.06.30MFRC522连续读卡程序\PRO\RFID.uvproj
+Project File Date:  07/15/2016
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling MAIN.C...
+..\SRC\MAIN.C(54): warning C280: 'i': unreferenced local variable
+..\SRC\MAIN.C(55): warning C280: 'temp': unreferenced local variable
+compiling RC522.C...
+linking...
+Program Size: data=79.0 xdata=0 const=26 code=2574
+creating hex file from "..\OUT\RFID2"...
+"..\OUT\RFID2" - 0 Error(s), 2 Warning(s).

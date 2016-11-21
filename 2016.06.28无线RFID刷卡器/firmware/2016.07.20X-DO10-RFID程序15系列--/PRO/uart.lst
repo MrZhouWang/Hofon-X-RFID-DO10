@@ -1,0 +1,249 @@
+C51 COMPILER V9.52.0.0   UART                                                              08/17/2016 10:12:55 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN ..\OUT\uart.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\uart.c LARGE OMF2 BROWSE INCDIR(..\INC;..\PRO;..\SRC) 
+                    -DEBUG PRINT(.\uart.lst) TABS(2) OBJECT(..\OUT\uart.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          
+   3          volatile OS_UART xdata uart;
+   4          volatile UINT8 InTemp;
+   5          bit busy;
+   6          
+   7          #define RCV_OVER_TIMER          2
+   8          #define RCV_OVER_TIMER232   2
+   9          extern void Serial232PutChar(UINT8 dat);
+  10          extern void Send485SerialByte(UINT8 *Ram, UINT16 len);
+  11          
+  12          
+  13          /***************************************************
+  14              UART1初始化
+  15                                  7     6     5     4     3     2     1     0     Reset Value
+  16          sfr SCON = 0x98; //Serial Control         SM0/FE SM1   SM2   REN   TB8   RB8    TI    RI    0000,0000
+  17          SM0 SM1:
+  18           0   0         同步移位寄存器   fosc/12
+  19           0   1       10位异步收发         由定时器控制
+  20           1   0         11位异步收发     fosc/32或fosc/64
+  21           1   1         11位异步收发         由定时器控制
+  22          P = PSW.0      P=1奇   P=0偶
+  23          ***************************************************/
+  24          void InitT485(void)
+  25          {
+  26   1        SCON = 0x50;    //8位数据,可变波特率
+  27   1        AUXR &= 0xBF;   //定时器1时钟为Fosc/12,即12T
+  28   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+  29   1        TMOD &= 0x0F;   //设定定时器1为16位自动重装方式
+  30   1        TL1 = 0xE8;   //设定定时初值
+  31   1        TH1 = 0xFF;   //设定定时初值
+  32   1        ET1 = 0;    //禁止定时器1中断
+  33   1        TR1 = 1;    //启动定时器1
+  34   1      
+  35   1      
+  36   1      //  TMOD = (TMOD & 0x0f) | 0x20;  //8位自动重载定时器
+  37   1      //  SCON = 0xd0;              //串行口工作模式3选择
+  38   1      //  IP   = 0x10;            //PS set the high
+  39   1      //  PCON  &= 0x7f;                  //SOMD =0
+  40   1      //
+  41   1      //  //波特率 38400
+  42   1      //  AUXR |= 0x40;             //定时器1时钟为Fosc,即1T
+  43   1      //  AUXR &= 0xfe;             //串口1选择定时器1为波特率发生器
+  44   1      //  TL1 = 0xF7;                 //设定定时初值
+  45   1      //  TH1 = 0xF7;                 //设定定时器重装值
+  46   1      //
+  47   1      //
+  48   1      //  ET1  = 0;                       //close timer1 interrupt
+  49   1      //  TR1  = 1;                     //open timer1
+  50   1        ES   = 1;               //Enabled serial port interrrup 
+  51   1        EA=1;
+  52   1      
+  53   1      }
+  54          /*******************************************************************************
+C51 COMPILER V9.52.0.0   UART                                                              08/17/2016 10:12:55 PAGE 2   
+
+  55                        串口1初始化
+  56            input :     none
+  57            default:
+  58                data bits:  8
+  59                start bits: 1
+  60                stop bits:  1
+  61                parity:     NONE          
+  62          *******************************************************************************/
+  63          void UART485_Init(void)
+  64          {
+  65   1        InitT485();
+  66   1        M485_CTRL_OFF;//接收模式   
+  67   1        uart.rIndex = 0;
+  68   1        uart.rFlag  = 0;
+  69   1        uart.rTimer = 0;  
+  70   1      }
+  71          
+  72          /*******************************************************************************
+  73                       串口1中断函数
+  74          *******************************************************************************/
+  75          void SCON485_int (void) interrupt 4 using 1
+  76          {
+  77   1        if (RI)
+  78   1          {
+  79   2          RI = 0;
+  80   2              //SBUF=SBUF; 
+  81   2          if ( uart.rIndex >= UART_BUF_LEN ) return;
+  82   2          if(uart.rFlag == ON)
+  83   2            return;
+  84   2          uart.rBuffer[uart.rIndex++] = SBUF; 
+  85   2          uart.rTimer = RCV_OVER_TIMER;
+  86   2        }
+  87   1      
+  88   1      }
+  89          
+  90          
+  91          ////////////////////////////////////////////////////////////////////////////////
+  92          // 功能描述 : 串口1发送一个字节数据
+  93          // 输入参数 : 
+  94          // 返回参数 : 
+  95          // 说明     :  
+  96          ////////////////////////////////////////////////////////////////////////////////
+  97          void Usart1_SendByte(UINT8 byte)
+  98          {
+  99   1          while(TI);
+ 100   1          SBUF = byte;           
+ 101   1          while(!TI);
+ 102   1          TI=0;             
+ 103   1      }
+ 104          /***********************************************
+ 105                  串口发送程序
+ 106          input :     *Ram    
+ 107                      len     
+ 108          output :    NONE
+ 109          ***********************************************/
+ 110          void Send485SeriaDate(UINT8 *Ram, UINT16 len)
+ 111          {
+ 112   1          UINT8 ite;
+ 113   1        
+ 114   1        M485_CTRL_ON;
+ 115   1        LED_TXD485_ON;//发射状态
+ 116   1        DelayMs(2);
+C51 COMPILER V9.52.0.0   UART                                                              08/17/2016 10:12:55 PAGE 3   
+
+ 117   1        for(ite=0;ite<len;ite++)
+ 118   1        {
+ 119   2          Usart1_SendByte(Ram[ite]);
+ 120   2        }
+ 121   1        DelayMs(2);
+ 122   1        M485_CTRL_OFF;//接收状态
+ 123   1        
+ 124   1        LED_TXD485_OFF;
+ 125   1        
+ 126   1      
+ 127   1      }
+ 128          ///////////////////////////////////////////////--UART232--配置--////////////////////////////////
+ 129          
+ 130          /***************************************************
+ 131              UART2初始化
+ 132          ***************************************************/
+ 133          //void InitT232(void)
+ 134          //{
+ 135          //  //扫描枪串口配置:8BIT数据位、无奇偶校验、1位停止位
+ 136          //  #if (PARITYBIT232 == NONE_PARITY)
+ 137          //        S2CON = 0x5A;               //8位可变波特率 (无校验位)
+ 138          //  #elif (PARITYBIT232 == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+ 139          //        S2CON = 0xda;               //9位可变波特率,校验位初始为1
+ 140          //  #elif (PARITYBIT232 == SPACE_PARITY)
+ 141          //        S2CON = 0xd5;               //9位可变波特率,校验位初始为0
+ 142          //  #endif
+ 143          //    
+ 144          //  switch (baudrate)
+ 145          //  {
+ 146          //    case BD_4800:
+ 147          //      BRT = -(FOSC/32/BD232_4800);      //设置独立波特率发生器的重载初值
+ 148          //      break;
+ 149          //    case BD_9600:
+ 150          //      BRT = -(FOSC/32/BD232_9600);      //设置独立波特率发生器的重载初值
+ 151          //      break;
+ 152          //    case BD_19200:
+ 153          //      BRT = -(FOSC/32/BD232_19200);      //设置独立波特率发生器的重载初值
+ 154          //      PCON |= 0x80;
+ 155          //      break;
+ 156          //    case BD_38400:
+ 157          //      BRT = -(FOSC/32/BD232_38400);      //设置独立波特率发生器的重载初值
+ 158          //      break;
+ 159          //    default:
+ 160          //      BRT = -(FOSC/32/BD232_9600);      //设置独立波特率发生器的重载初值
+ 161          //      break;
+ 162          //        }
+ 163          //        AUXR = 0x14;                //独立波特率发生器工作在1T模式
+ 164          //        IE2 = 0x01;                 //使能串口2中断 
+ 165          //    return;
+ 166          //}
+ 167          /*******************************************************************************
+ 168                        串口初始化
+ 169            input :     none
+ 170            default:
+ 171                data bits:  8
+ 172                start bits: 1
+ 173                stop bits:  1
+ 174                parity:     NONE          
+ 175          *******************************************************************************/
+ 176          //void UART232_Init(void)
+ 177          //{
+ 178          //  InitT232();
+C51 COMPILER V9.52.0.0   UART                                                              08/17/2016 10:12:55 PAGE 4   
+
+ 179          //  uart232.rIndex = 0;
+ 180          //  uart232.rFlag  = 0;
+ 181          //  uart232.rTimer = 0; 
+ 182          //}
+ 183          
+ 184          /*******************************************************************************
+ 185                       扫描枪串口中断函数
+ 186                  
+ 187          *******************************************************************************/
+ 188          //void SCON232_int (void) interrupt 8
+ 189          //{    
+ 190          //  if(uart232.rFlag == ON)
+ 191          //  {
+ 192          //    uart232.rFlag   = OFF;
+ 193          //    uart232.rIndex  = 0;
+ 194          //    InTemp = 0;
+ 195          //  }
+ 196          //  // 接收中断
+ 197          //  if(S2CON & S2RI) 
+ 198          //  {
+ 199          //    S2CON &= ~S2RI;         //清除接收完成标志                 
+ 200          //    if ( uart232.rIndex >= UART232_BUF_LEN )
+ 201          //      return;
+ 202          //    uart232.rBuffer[uart232.rIndex++] = S2BUF;  
+ 203          //    uart232.rTimer = RCV_OVER_TIMER232;        
+ 204          //  }
+ 205          //    //发送完成中断
+ 206          //  if (S2CON & S2TI)
+ 207          //  {
+ 208          //    S2CON &= ~S2TI;         //清除发送完成标志
+ 209          //    busy = 0;
+ 210          //  }
+ 211          //}
+ 212          
+ 213          /*******************************************************************************
+ 214                          END         
+ 215          *******************************************************************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    227    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    106       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,95 @@
+C51 COMPILER V9.52.0.0   INIT                                                              11/15/2016 10:54:19 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN ..\OUT\init.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\init.c LARGE OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\I
+                    -NC;..\PRO;..\SRC) DEBUG PRINT(.\init.lst) TABS(2) OBJECT(..\OUT\init.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          
+   3          ////////////////////////////////////////////////////////////////////////////////
+   4          // 功能描述 : 端口初始化
+   5          // 输入参数 : 
+   6          // 返回参数 : 
+   7          // 说明     :  
+   8          ////////////////////////////////////////////////////////////////////////////////
+   9          void IO_Init(void)
+  10          {
+  11   1        P0M1 |= 0x0;
+  12   1        P0M0 |= 0x0E;  //P0.1 p0.2 P0.3推挽输出
+  13   1        
+  14   1        P1M1 &= 0x00;
+  15   1        P1M0 |= 0xff;  //p1口 all推挽输出 
+  16   1        /***485接收**************/
+  17   1        M485_CTRL_OFF;//接收状态
+  18   1        /***熄灭灯塔**************/
+  19   1        CNTRL1_OFF;     CNTRL2_OFF;     CNTRL3_OFF;
+  20   1        CNTRL4_OFF;     CNTRL5_OFF;     CNTRL6_OFF;
+  21   1        CNTRL7_OFF;     CNTRL8_OFF;     CNTRL9_OFF;
+  22   1        CNTRL10_OFF;
+  23   1      
+  24   1        led_off();
+  25   1        
+  26   1        BEEP_OFF;
+  27   1        RC522_rFlag  = OFF;   //清除RFID信息  
+  28   1        sys.led_scan_flag = OFF;
+  29   1        AUXR &= ~0X20;        //0：允许使用内部扩展的1024字节扩展RAM；
+  30   1        CLK_DIV=0;            //外部晶体时钟或内部R/C振荡时钟
+  31   1      }
+  32          ////////////////////////////////////////////////////////////////////////////////
+  33          // 功能描述 : 开机自检测程序 显示版本号，各段码
+  34          // 输入参数 : 
+  35          // 返回参数 : 
+  36          // 说明     :  
+  37          ////////////////////////////////////////////////////////////////////////////////
+  38          void Start_Init(void)
+  39          {
+  40   1      
+  41   1        //系统数据复位
+  42   1        RC522_rFlag   = OFF;
+  43   1      
+  44   1        LED_RXD485_ON;    LED_TXD485_ON;
+  45   1      
+  46   1        //点亮指示灯
+  47   1        led_light_ctrl(LED_BLUE);   // 仅亮红灯显示
+  48   1        DelayMs(500);
+  49   1      
+  50   1        led_light_ctrl(LED_GREEN);  // 仅亮绿灯显示
+  51   1        DelayMs(500);
+  52   1        led_light_ctrl(LED_RED);    // 仅亮蓝灯显示
+  53   1        DelayMs(500);
+  54   1      
+C51 COMPILER V9.52.0.0   INIT                                                              11/15/2016 10:54:19 PAGE 2   
+
+  55   1        led_light_ctrl(LED_RG);     // 仅亮红绿灯显示
+  56   1        DelayMs(500);
+  57   1        led_light_ctrl(LED_RB);     // 仅亮红蓝灯显示
+  58   1        DelayMs(500);
+  59   1        led_light_ctrl(LED_GB);     // 仅亮绿蓝灯显示
+  60   1        DelayMs(500);
+  61   1        led_light_ctrl(LED_NONE);   // 灭所有显示
+  62   1        LED_RXD485_OFF;   LED_TXD485_OFF; BEEP_OFF;
+  63   1        M485_CTRL_OFF;              //接收模式   
+  64   1        ClearAll();
+  65   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    148    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

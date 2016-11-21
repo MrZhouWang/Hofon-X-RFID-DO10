@@ -1,0 +1,833 @@
+10:43:39.400
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:40.447
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:41.460
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:42.491
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:48.604
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:49.646
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:50.656
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:51.699
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:52.731
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:53.744
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:54.783
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:55.817
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:56.824
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:57.872
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:58.883
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:43:59.927
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:00.962
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:01.969
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:02.999
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:04.010
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:05.037
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:06.047
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:07.080
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:08.088
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:09.115
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:10.123
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:11.130
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:12.173
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:13.206
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:14.239
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:15.246
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:16.291
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:17.326
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:18.362
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:19.371
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:20.412
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:21.448
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:22.482
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:23.490
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:24.531
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:25.565
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:26.574
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:27.609
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:28.650
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:29.689
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:30.724
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:31.732
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:32.768
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:33.777
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:35.127
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:36.396
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:37.433
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:38.466
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:39.474
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:40.505
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:41.514
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:42.555
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:43.589
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:44.598
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:45.637
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:46.669
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:47.676
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:48.709
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:49.716
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:50.723
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:51.765
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:52.798
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:53.808
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:54.849
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:55.887
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:56.917
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:57.924
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:58.952
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:44:59.959
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:00.966
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:02.004
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:03.010
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:04.043
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:05.050
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:06.093
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:07.126
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:08.158
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:09.192
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:10.225
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:11.232
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:12.262
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:13.269
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:14.275
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:15.317
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:16.351
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:17.357
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:18.364
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:19.408
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:20.414
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:21.443
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:22.477
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:23.511
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:24.518
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:25.562
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:26.597
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:27.631
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:28.639
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:29.670
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:30.677
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:31.685
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:32.726
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:33.760
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:34.766
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:35.797
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:36.804
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:37.848
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:38.881
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:39.888
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:40.917
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+10:45:41.924
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+11:52:59.611
+System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+11:53:00.617
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+11:53:01.624
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )
+11:53:12.854
+System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 Ptl.Device.Communication.ModbusClient.p0VvoHo9OO(Int32  )
+   在 Ptl.Device.Communication.ModbusClient.WMCv3cXWvo(Byte  , IProtocol  , Boolean  )
+   在 Ptl.Device.Communication.ModbusClient.Execute(Byte address, IUnicastProtocol protocol)
+   在 J6w22qmVK5ZOxJoEq1.jOfVc5E90unE7txnuF.Execute(PtlDevice  , ICommunicationClient  )

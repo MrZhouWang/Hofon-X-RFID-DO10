@@ -1,0 +1,6 @@
+08:39:55.735
+System.ObjectDisposedException: 已关闭 Safe handle
+   在 System.StubHelpers.StubHelpers.SafeHandleC2NHelper(Object pThis, IntPtr pCleanupWorkList)
+   在 System.Net.UnsafeNclNativeMethods.OSSOCK.shutdown(SafeCloseSocket socketHandle, Int32 how)
+   在 System.Net.Sockets.Socket.Shutdown(SocketShutdown how)
+   在 Ptl.Device.Communication.ModbusClient.rL6v8YofIT()

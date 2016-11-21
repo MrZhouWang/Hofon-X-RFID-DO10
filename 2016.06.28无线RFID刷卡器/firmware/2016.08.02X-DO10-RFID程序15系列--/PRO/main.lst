@@ -1,0 +1,234 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:54:18 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\OUT\main.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\main.c LARGE OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\I
+                    -NC;..\PRO;..\SRC) DEBUG PRINT(.\main.lst) TABS(2) OBJECT(..\OUT\main.obj)
+
+line level    source
+
+   1          /**********************************************
+   2          *  CPU:STC12W1K16S
+   3          *  晶振:11.0592MHZ
+   4          ------------------------------------------------*/
+   5          
+   6          #define  MAIN_GLOBAL
+   7          #include "include.h"
+   8          volatile unsigned short timerc;
+   9          volatile OS_SYS sys;
+  10          ///////////////////////////////全局变量/////////////////////////////////////
+  11          
+  12          unsigned char code rc_data[16] ={0x12,0x34,0x56,0x78,0xED,0xCB,0xA9,0x87,0x12,0x34,0x56,0x78,0x01,0xFE,0x0
+             -1,0xFE};//M1卡的某一块写为如下格式，则该块为钱包，可接收扣款和充值命令
+  13                                                                                                                    
+             -        //4字节金额（低字节在前）＋4字节金额取反＋4字节金额＋1字节块地址＋1字节块地址取反＋1字节块地址＋1字节块地址取反 
+  14          
+  15          unsigned char code DefaultKey[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};  //原始密码
+  16          unsigned char code DefaultKeyA[6] = {7,7,7,7,7,7};    //密码A
+  17          unsigned char code DefaultKeyB[6] = {8,8,8,8,8,8};    //密码B
+  18          
+  19                                                                //其数据都还没被采集上去，则蓝色闪烁）；
+  20          volatile UINT8 led_flash_NO =LED_RED;                 //灯组控制
+  21          volatile UINT16 led_flash_period=1000;                //闪烁周期控制
+  22          volatile UINT8 led_flash_mode =LED_FLASH_MODE_1V1;    //亮灭时间比例控制:0常亮
+  23          volatile UINT8 led_flash_status = 0;                  //闪烁控制灯时，灯当前的状态,0——灭；1——亮
+  24          volatile UINT8 led_flash_NO_BK =LED_RED;              //灯组控制备份数据(拉进度条后使用)
+  25          
+  26          
+  27          volatile UINT8 beSettingAddr = 0;                     //0:非设置站址    1:设置站址    2：站址设定已经按下OK键
+  28          volatile UINT8 toSettedAddr[3];                       //待设定地址值
+  29          
+  30          volatile UINT8 SystemLocked = OFF;                    //锁定系统、解锁系统
+  31             
+  32          ///////////////////////////////全局变量-END-////////////////////////////////
+  33          
+  34          
+  35          
+  36          
+  37          
+  38          
+  39          
+  40          ////////////////////////////////////////////////////////////////////////////////
+  41          // 功能描述 : main program
+  42          // 输入参数 : 
+  43          // 返回参数 : 
+  44          // 说明     :  
+  45          ////////////////////////////////////////////////////////////////////////////////
+  46          int main(void) 
+  47          {   
+  48   1        DelayMs(50);                //等待电源稳定        
+  49   1        
+  50   1        EA = 0;
+  51   1        IO_Init();
+  52   1        InitT0();
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:54:18 PAGE 2   
+
+  53   1      
+  54   1        LoadParaInEeprom();
+  55   1      
+  56   1        UART485_Init();             //固定使用38400波特率
+  57   1        
+  58   1        PcdReset();
+  59   1        PcdAntennaOff(); 
+  60   1        PcdAntennaOn(); 
+  61   1        
+  62   1        Start_Init();
+  63   1        
+  64   1        RC_WorkeMode=RC_ReadMode;   //设置  读卡/写卡/改密码
+  65   1      
+  66   1        
+  67   1      
+  68   1        BEEP_OFF;
+  69   1        WDT_Start();                //启动看门狗  
+  70   1        EA = 1;                     //使能中断  
+  71   1        while(1)
+  72   1        { 
+  73   2          WDT_Reset();              //复位看门狗
+  74   2          if(RC_WorkeMode==RC_WriteMode)                          //写模式  /**************RFID卡读写控制*********
+             -**************/
+  75   2             M1_WriteDate(PICC_AUTHENT1A,8,rc_data,DefaultKey);   //写IC卡
+  76   2          else if(RC_WorkeMode==RC_ReadMode)                      //读模式
+  77   2             M1_Read(PICC_AUTHENT1A ,0,16,DefaultKey);            //扫描读IC卡
+  78   2          else if(RC_WorkeMode==RC_ChangeMode)                    //改密码
+  79   2             M1_ChangeKey(7);
+  80   2      
+  81   2          CMD_led_flash();                   //RGB控制
+  82   2      
+  83   2          CMD_LigheTower_flash();            //灯塔控制
+  84   2      
+  85   2          Scan_Keyboard();                   //按键处理(有按键时)
+  86   2          if (keyStatus != CMD_KEY_NULL) 
+  87   2          {
+  88   3            Process_Keyboard();
+  89   3          }
+  90   2      
+  91   2          if (uart.rFlag == ON)              //处理485通讯
+  92   2          {
+  93   3            //Send485SeriaDate((UINT8 *)uart.rBuffer, uart.rIndex);   //串口打印接收到的数据
+  94   3            Cmd_Process();
+  95   3            uart.rFlag   = OFF;
+  96   3            uart.rIndex  = 0;
+  97   3          }
+  98   2          WDT_Reset();                      //复位看门狗
+  99   2        }                 
+ 100   1      }
+ 101          //////////////////////////////////////////////////////////////////////////////////
+ 102          //// 功能描述 : 定时器中断入口
+ 103          //// 输入参数 : 
+ 104          //// 返回参数 : 
+ 105          //// 说明     :  2ms
+ 106          //////////////////////////////////////////////////////////////////////////////////
+ 107          void timer0_int (void) interrupt 1
+ 108          { 
+ 109   1          char index = 0;
+ 110   1          TH0  = TH0_INIT;
+ 111   1          TL0  = TL0_INIT;
+ 112   1      
+ 113   1          if(rc_blink_read>1)            //读卡或者写卡成功后指示灯亮
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:54:18 PAGE 3   
+
+ 114   1          {
+ 115   2            rc_blink_read--;
+ 116   2            led_on();
+ 117   2            BEEP_ON;
+ 118   2          }
+ 119   1          else if(rc_blink_read==1)
+ 120   1          {
+ 121   2            rc_blink_read=0;
+ 122   2            led_off();
+ 123   2            BEEP_OFF;
+ 124   2          }
+ 125   1      
+ 126   1          
+ 127   1          if (uart.rIndex != 0)          //串口1-485缓冲区有数据  
+ 128   1          {
+ 129   2              if (uart.rTimer-- == 0) 
+ 130   2              {
+ 131   3                  uart.rFlag  = ON;
+ 132   3              }
+ 133   2          }
+ 134   1          
+ 135   1          
+ 136   1          if(SetAddrFlag>1)              //设置地址时指示
+ 137   1          {
+ 138   2             SetAddrFlag--;  
+ 139   2          }
+ 140   1          if(SetAddrFlag>0)
+ 141   1             LED_G_ON;
+ 142   1          
+ 143   1          if(SetAddrFlag>2)
+ 144   1             BEEP_ON;
+ 145   1          if(SetAddrFlag==2)
+ 146   1             BEEP_OFF;
+ 147   1          if(SetAddrFlag>150)     
+ 148   1             led_on();
+ 149   1          else if((SetAddrFlag<=150)&&(SetAddrFlag>115))
+ 150   1             led_off();
+ 151   1          else if((SetAddrFlag<=115)&&(SetAddrFlag>85))
+ 152   1             led_on();
+ 153   1          else if((SetAddrFlag<=85)&&(SetAddrFlag>50))
+ 154   1             led_off();
+ 155   1          else if((SetAddrFlag<=50)&&(SetAddrFlag>20))
+ 156   1             led_on();
+ 157   1          else if((SetAddrFlag<=20)&&(SetAddrFlag>3))
+ 158   1             led_off();
+ 159   1          
+ 160   1          
+ 161   1          
+ 162   1          
+ 163   1          if (sys.led_flash_count != 0)     //递减计算器，自减1 用于RGB闪烁周期
+ 164   1              sys.led_flash_count--;
+ 165   1          
+ 166   1          for(index = 0; index < 10; index++)
+ 167   1          {
+ 168   2             if(LightTowerCtl[index].led_flash_count > 0)
+ 169   2                LightTowerCtl[index].led_flash_count--;
+ 170   2          }
+ 171   1      
+ 172   1      }
+ 173          //////////////////////////////////////////////////////////////////////////////////
+ 174          //// 功能描述 : 设置看门狗
+ 175          //// 输入参数 : 
+C51 COMPILER V9.52.0.0   MAIN                                                              11/15/2016 10:54:18 PAGE 4   
+
+ 176          //// 返回参数 : 
+ 177          //// 说明     : 最大计数值 
+ 178          //////////////////////////////////////////////////////////////////////////////////
+ 179          void WDT_Start()
+ 180          {
+ 181   1          WDT_CONTR = 0x07;       //设置看门狗为最大计数 11.0952Mhz时 约9秒
+ 182   1          WDT_CONTR |= 0x20;      //启动看门狗
+ 183   1      }
+ 184          //////////////////////////////////////////////////////////////////////////////////
+ 185          //// 功能描述 : 复位看门狗
+ 186          //// 输入参数 : 
+ 187          //// 返回参数 : 
+ 188          //// 说明     : 计数值清零
+ 189          //////////////////////////////////////////////////////////////////////////////////
+ 190          void WDT_Reset()
+ 191          {
+ 192   1          WDT_CONTR |= 0x10;      //复位看门狗
+ 193   1      }
+ 194          /*******************************************************************************
+ 195                          END         
+ 196          *******************************************************************************/
+ 197          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    572    ----
+   CONSTANT SIZE    =     34    ----
+   XDATA SIZE       =     33       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

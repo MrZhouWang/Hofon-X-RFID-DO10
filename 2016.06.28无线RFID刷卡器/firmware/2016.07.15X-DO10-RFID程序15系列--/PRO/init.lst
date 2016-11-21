@@ -1,0 +1,159 @@
+C51 COMPILER V9.00   INIT                                                                  07/18/2016 14:16:51 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN ..\OUT\init.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\SRC\init.c LARGE BROWSE INCDIR(..\INC;..\PRO;..\SRC) DEBUG OBJECTEXTEND PRINT
+                    -(.\init.lst) OBJECT(..\OUT\init.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          
+   3          INT8U  const  code   LEDSecBit[7] = {37,38,39,40,41,42,36};             //段码对应的LED库表
+   4          UINT8   const  code  Version[LED_NUMBER]={'V',0x3C,'2'};           //开机显示版本号
+   5          ////////////////////////////////////////////////////////////////////////////////
+   6          // 功能描述 : 端口初始化
+   7          // 输入参数 : 
+   8          // 返回参数 : 
+   9          // 说明     :  
+  10          ////////////////////////////////////////////////////////////////////////////////
+  11          void IO_Init(void)
+  12          {
+  13   1      //      P0M1 = 0x00;
+  14   1      //      P0M0 = 0x0f;
+  15   1      //
+  16   1              P1M1 = 0x00;
+  17   1              P1M0 = 0x80;     //p1.7推挽输出
+  18   1      
+  19   1              P2M1 = 0x00;
+  20   1              P2M0 = 0x0e;    //P2.3 P2.2 P2.1推挽输出
+  21   1      
+  22   1              P3M1 = 0x00;
+  23   1              P3M0 = 0xc0;  //p3.7 p3.6推挽输出
+  24   1      
+  25   1              P4SW = 0x70;     //        P4.5 P4.6, P4.4 设置为普通IO口
+  26   1      
+  27   1      //      //先熄灭指示灯
+  28   1              CNTRL1_OFF;                     CNTRL2_OFF;                     CNTRL3_OFF;
+  29   1              CNTRL4_OFF;                     CNTRL5_OFF;                     CNTRL6_OFF;
+  30   1      
+  31   1              LED_CNTRL1_OFF;         LED_CNTRL2_OFF;         LED_CNTRL3_OFF;
+  32   1              LED_CNTRL4_OFF;         LED_CNTRL5_OFF;         LED_CNTRL6_OFF;
+  33   1              sys.led_scan_flag = OFF;
+  34   1              AUXR &= ~0X20;//0：允许使用内部扩展的1024字节扩展RAM；
+  35   1              CLK_DIV=0;//外部晶体时钟或内部R/C振荡时钟
+  36   1      }
+  37          ////////////////////////////////////////////////////////////////////////////////
+  38          // 功能描述 : 开机自检测程序 显示版本号，各段码
+  39          // 输入参数 : 
+  40          // 返回参数 : 
+  41          // 说明     :  
+  42          ////////////////////////////////////////////////////////////////////////////////
+  43          void Start_Init(void)
+  44          {
+  45   1      //      UINT8 i = 0;
+  46   1              UINT8 i,j;
+  47   1              //显示版本
+  48   1              for (i=0; i<LED_NUMBER; i++)
+  49   1              {
+  50   2                      led[i].num  = Version[i];
+  51   2      //              led[i].delay = 0;
+  52   2                      led[i].show  = ON;
+  53   2              }
+  54   1              DelayMs(800);
+C51 COMPILER V9.00   INIT                                                                  07/18/2016 14:16:51 PAGE 2   
+
+  55   1          //显示各段码
+  56   1              for(i = 0; i < 7; i++)
+  57   1              {
+  58   2                      for(j = 0; j < LED_NUMBER; j++)
+  59   2                      {  led[j].num = LEDSecBit[i];  }                    //段码亮
+  60   2      
+  61   2                      DelayMs(300);    //延时显示
+  62   2              }
+  63   1              //显示全8
+  64   1              for (i=0; i<LED_NUMBER; i++)
+  65   1              {
+  66   2                      led[i].num  = 0X08;
+  67   2      //              led[i].delay = 0;
+  68   2                      led[i].show  = ON;
+  69   2              }
+  70   1      //      //系统数据复位
+  71   1              DispInfoCur.SRCodeLen = 0;
+  72   1              uart232.rFlag   = OFF;
+  73   1              uart232.rIndex  = 0;
+  74   1      
+  75   1              LED_RXD485_ON;          LED_TXD485_ON;
+  76   1      
+  77   1              //点亮LED
+  78   1      //      for (i=0; i<LED_NUMBER; i++)
+  79   1      //      {
+  80   1      //              led[i].num  = 0X08;
+  81   1      //              led[i].show  = ON;
+  82   1      //      }
+  83   1      //      sys.led_scan_flag = ON;
+  84   1      //      DelayMs(1000);
+  85   1              //显示地址
+  86   1              led[0].num = address[0];                       
+  87   1          led[1].num = address[1];
+  88   1          led[2].num = address[2];
+  89   1              //点亮指示灯
+  90   1      //      led_light_ctrl(LED_RED, ON);
+  91   1              led_light_ctrl(LED_RED);                        // 仅亮红灯显示
+  92   1              DelayMs(500);
+  93   1      //      led_light_ctrl(LED_RED, OFF);
+  94   1      //      led_light_ctrl(LED_GREEN, ON);
+  95   1              led_light_ctrl(LED_GREEN);                      // 仅亮绿灯显示
+  96   1              DelayMs(500);
+  97   1      //      led_light_ctrl(LED_GREEN, OFF);
+  98   1      //      led_light_ctrl(LED_BLUE, ON);
+  99   1              led_light_ctrl(LED_BLUE);                       // 仅亮蓝灯显示
+ 100   1              DelayMs(500);
+ 101   1      //      led_light_ctrl(LED_BLUE, OFF);
+ 102   1      
+ 103   1              for (i=0; i<LED_NUMBER; i++)
+ 104   1              { led[i].num  = ' '; }
+ 105   1      
+ 106   1              led_light_ctrl(LED_RG);                 // 仅亮红绿灯显示
+ 107   1              DelayMs(500);
+ 108   1              led_light_ctrl(LED_RB);                 // 仅亮红蓝灯显示
+ 109   1              DelayMs(500);
+ 110   1              led_light_ctrl(LED_GB);                 // 仅亮绿蓝灯显示
+ 111   1              DelayMs(500);
+ 112   1              led_light_ctrl(LED_NONE);               // 灭所有显示
+ 113   1              //点亮信号灯
+ 114   1              CNTRL1_ON;              LED_CNTRL1_ON;          CNTRL4_ON;              LED_CNTRL4_ON;          
+ 115   1              led[0].num = 'F'-'A'+10;                        led[1].num = 0X01;              led[2].num = FinishedLED;                      
+ 116   1              DelayMs(1000);          
+C51 COMPILER V9.00   INIT                                                                  07/18/2016 14:16:51 PAGE 3   
+
+ 117   1              CNTRL1_OFF;             LED_CNTRL1_OFF;         CNTRL4_OFF;             LED_CNTRL4_OFF;
+ 118   1              CNTRL2_ON;              LED_CNTRL2_ON;          CNTRL5_ON;              LED_CNTRL5_ON;          
+ 119   1              led[0].num = 'F'-'A'+10;                        led[1].num = 0X02;              led[2].num = WtTime;                   
+ 120   1              DelayMs(1000);
+ 121   1              CNTRL2_OFF;             LED_CNTRL2_OFF;         CNTRL5_OFF;             LED_CNTRL5_OFF;
+ 122   1              CNTRL3_ON;              LED_CNTRL3_ON;          CNTRL6_ON;              LED_CNTRL6_ON;
+ 123   1              led[0].num = 'F'-'A'+10;                        led[1].num = 0X03;              led[2].num = FnDefine;                 
+ 124   1              DelayMs(1000);
+ 125   1              CNTRL3_OFF;             LED_CNTRL3_OFF;         CNTRL6_OFF;             LED_CNTRL6_OFF;
+ 126   1              led[0].num = 'F'-'A'+10;                        led[1].num = 0X04;              led[2].num = DispMode;                 
+ 127   1              DelayMs(1000);
+ 128   1              LED_RXD485_OFF;         LED_TXD485_OFF;
+ 129   1              //清除显示
+ 130   1              ClearAll();
+ 131   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    472    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

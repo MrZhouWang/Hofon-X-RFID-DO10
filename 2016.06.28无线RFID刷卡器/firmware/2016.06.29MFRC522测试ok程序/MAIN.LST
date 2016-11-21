@@ -1,0 +1,229 @@
+C51 COMPILER V9.00   MAIN                                                                  07/15/2016 16:12:26 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN MAIN.OBJ
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE MAIN.C BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /**********************RC522ÊµÑé¿ª·¢°åÀý³Ì************************
+   2          *  CPU:STC89C52RC
+   3          *  ¾§Õñ:11.0592MHZ
+   4          ------------------------------------------------*/
+   5          #include <STC15F2K60S2.H>
+   6          
+   7          #include  <STDIO.H>
+   8          #include <string.h>
+   9          #include "main.h"
+  10          #include "mfrc522.h"
+  11          
+  12          unsigned char code data1[16] = {0x12,0x34,0x56,0x78,0xED,0xCB,0xA9,0x87,0x12,0x34,0x56,0x78,0x01,0xFE,0x01
+             -,0xFE};
+  13          //M1¿¨µÄÄ³Ò»¿éÐ´ÎªÈçÏÂ¸ñÊ½£¬Ôò¸Ã¿éÎªÇ®°ü£¬¿É½ÓÊÕ¿Û¿îºÍ³äÖµÃüÁî
+  14          //4×Ö½Ú½ð¶î£¨µÍ×Ö½ÚÔÚÇ°£©£«4×Ö½Ú½ð¶îÈ¡·´£«4×Ö½Ú½ð¶î£«1×Ö½Ú¿éµØÖ·£«1×Ö½Ú¿éµØÖ·È¡·´£«1×Ö½Ú¿éµØÖ·£«1×Ö½Ú¿éµØÖ
+             -·È¡·´ 
+  15          unsigned char code data2[4]  = {0,0,0,0x01};
+  16          unsigned char code DefaultKey[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; 
+  17          
+  18          unsigned char g_ucTempbuf[20];                        
+  19          void delay1(unsigned int z)
+  20          {
+  21   1              unsigned int x,y;
+  22   1              for(x=z;x>0;x--)
+  23   1              for(y=110;y>0;y--);     
+  24   1      }  
+  25            void led_on()
+  26          {
+  27   1              LED4=0;
+  28   1              LED6=0;
+  29   1              LED5=0 ;
+  30   1      }
+  31          void led_off()
+  32          {
+  33   1              LED4=1;
+  34   1              LED6=1;
+  35   1              LED5=1 ;
+  36   1      }
+  37          void led_blink()
+  38          {
+  39   1              led_on();
+  40   1              delay1(12000);
+  41   1              led_off();
+  42   1              delay1(12000);
+  43   1      }
+  44          
+  45          void main( )
+  46          {    
+  47   1           unsigned char status,i,j;
+  48   1                unsigned int temp;
+  49   1           InitializeSystem( );
+  50   1           PcdReset();
+  51   1           PcdAntennaOff(); 
+  52   1           PcdAntennaOn(); 
+  53   1           while ( 1 )
+C51 COMPILER V9.00   MAIN                                                                  07/15/2016 16:12:26 PAGE 2   
+
+  54   1           {   
+  55   2      
+  56   2      
+  57   2               status = PcdRequest(PICC_REQALL, g_ucTempbuf);//Ñ°¿¨
+  58   2               if (status != MI_OK)
+  59   2               {    
+  60   3                    InitializeSystem( );
+  61   3                    PcdReset();
+  62   3                    PcdAntennaOff(); 
+  63   3                    PcdAntennaOn(); 
+  64   3                                led_blink();
+  65   3                                continue;
+  66   3               }
+  67   2                       else
+  68   2                       {
+  69   3                            
+  70   3      
+  71   3                       }           
+  72   2                              printf("¿¨µÄÀàÐÍ:");
+  73   2                  for(i=0;i<2;i++)
+  74   2                                              {
+  75   3                                                      temp=g_ucTempbuf[i];
+  76   3                                                      printf("%X",temp);      
+  77   3                                              }
+  78   2                              
+  79   2               status = PcdAnticoll(g_ucTempbuf);//·À³å×²
+  80   2               if (status != MI_OK)
+  81   2               {    continue;    }
+  82   2      
+  83   2               
+  84   2                                              ////////ÒÔÏÂÎª³¬¼¶ÖÕ¶Ë´òÓ¡³öµÄÄÚÈÝ////////////////////////
+  85   2                                      
+  86   2                                              printf("¿¨ÐòÁÐºÅ£º");   //³¬¼¶ÖÕ¶ËÏÔÊ¾,
+  87   2                                              for(i=0;i<4;i++)
+  88   2                                              {
+  89   3                                                      temp=g_ucTempbuf[i];
+  90   3                                                      printf("%X",temp);
+  91   3                                                      
+  92   3                                              }
+  93   2      
+  94   2                                              ///////////////////////////////////////////////////////////
+  95   2      
+  96   2               status = PcdSelect(g_ucTempbuf);//Ñ¡¶¨¿¨Æ¬
+  97   2               if (status != MI_OK)
+  98   2               {    continue;    }
+  99   2               
+ 100   2               status = PcdAuthState(PICC_AUTHENT1A, 1, DefaultKey, g_ucTempbuf);//ÑéÖ¤¿¨Æ¬ÃÜÂë
+ 101   2               if (status != MI_OK)
+ 102   2               {    continue;    }
+ 103   2               
+ 104   2               status = PcdWrite(1, data1);//Ð´¿é
+ 105   2               if (status != MI_OK)
+ 106   2               {    continue;    }
+ 107   2      while(1)
+ 108   2                      {
+ 109   3               status = PcdRequest(PICC_REQALL, g_ucTempbuf);//Ñ°¿¨
+ 110   3               if (status != MI_OK)
+ 111   3               {   
+ 112   4                       InitializeSystem( );
+ 113   4           PcdReset();
+ 114   4           PcdAntennaOff(); 
+ 115   4           PcdAntennaOn(); 
+C51 COMPILER V9.00   MAIN                                                                  07/15/2016 16:12:26 PAGE 3   
+
+ 116   4                                continue;
+ 117   4               }
+ 118   3                       status = PcdAnticoll(g_ucTempbuf);//·À³å×²
+ 119   3               if (status != MI_OK)
+ 120   3               {    continue;    }
+ 121   3                      status = PcdSelect(g_ucTempbuf);//Ñ¡¶¨¿¨Æ¬
+ 122   3               if (status != MI_OK)
+ 123   3               {    continue;    }
+ 124   3               
+ 125   3               status = PcdAuthState(PICC_AUTHENT1A, 1, DefaultKey, g_ucTempbuf);//ÑéÖ¤¿¨Æ¬ÃÜÂë
+ 126   3               if (status != MI_OK)
+ 127   3               {    continue;    }
+ 128   3      
+ 129   3      
+ 130   3               status = PcdValue(PICC_DECREMENT,1,data2);//¿Û¿î
+ 131   3               if (status != MI_OK)
+ 132   3               {    continue;    }
+ 133   3                       
+ 134   3               status = PcdBakValue(1, 2);//¿é±¸·Ý
+ 135   3               if (status != MI_OK)
+ 136   3               {    continue;    }
+ 137   3               
+ 138   3               status = PcdRead(2, g_ucTempbuf);//¶Á¿é
+ 139   3               if (status != MI_OK)
+ 140   3               {    continue;    }
+ 141   3                      printf("¿¨¶Á¿é£º");     //³¬¼¶ÖÕ¶ËÏÔÊ¾,
+ 142   3               for(i=0;i<16;i++)
+ 143   3                                              {
+ 144   4                                                      temp=g_ucTempbuf[i];
+ 145   4                                                      printf("%X",temp);
+ 146   4                                                      
+ 147   4                                              }
+ 148   3      
+ 149   3                       printf("\n");
+ 150   3      
+ 151   3                  for(i=0;i<250;i++)//ÏÈÊä³öÒ»ÖÖÆµÂÊµÄÉùÒô
+ 152   3              {
+ 153   4               for(j=0;j<80;j++);
+ 154   4      
+ 155   4              }
+ 156   3                      delay1(100);
+ 157   3                      delay1(100);
+ 158   3      
+ 159   3                      delay1(200);                                             
+ 160   3                       PcdHalt();
+ 161   3                      }
+ 162   2          }
+ 163   1      }
+ 164          
+ 165          
+ 166          /////////////////////////////////////////////////////////////////////
+ 167          //ÏµÍ³³õÊ¼»¯
+ 168          /////////////////////////////////////////////////////////////////////
+ 169          void InitializeSystem()
+ 170          {
+ 171   1      /*      P0M1 = 0x0; P0M2 = 0x0;
+ 172   1              P1M1 = 0x0;     P1M2 = 0x0;                      
+ 173   1              P3M1 = 0x0; P3M2 = 0xFF; 
+ 174   1      */      P0 = 0xFF; P1 = 0xFF; P3 = 0xFF;P2 = 0xFF;
+ 175   1      
+ 176   1              TMOD=0x21;                 //ÉèT0Îª·½Ê½1£¬GATE=1£»
+ 177   1              SCON=0x50;
+C51 COMPILER V9.00   MAIN                                                                  07/15/2016 16:12:26 PAGE 4   
+
+ 178   1              TH1=0xFD;          //²¨ÌØÂÊÎª2400bps
+ 179   1              TL1=0xFD;
+ 180   1              TH0=0;
+ 181   1              TL0=0; 
+ 182   1              TR0=1;  
+ 183   1              ET0=1;             //ÔÊÐíT0ÖÐ¶Ï
+ 184   1              TR1=1;                     //¿ªÆô¶¨Ê±Æ÷
+ 185   1              TI=1;
+ 186   1              EA=1;                           //¿ªÆô×ÜÖÐ¶Ï
+ 187   1              
+ 188   1              ES = 1;
+ 189   1              RI = 1;
+ 190   1      
+ 191   1       
+ 192   1      }
+ 193          
+ 194          
+ 195          
+ 196             
+ 197            
+ 198          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    569    ----
+   CONSTANT SIZE    =     61    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     20       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

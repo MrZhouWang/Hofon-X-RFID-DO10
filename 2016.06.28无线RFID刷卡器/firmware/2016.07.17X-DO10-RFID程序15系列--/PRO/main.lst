@@ -1,0 +1,166 @@
+C51 COMPILER V9.00   MAIN                                                                  07/20/2016 15:45:35 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\OUT\main.obj
+COMPILER INVOKED BY: C:\C51\BIN\C51.EXE ..\SRC\main.c LARGE BROWSE INCDIR(..\INC;..\PRO;..\SRC) DEBUG OBJECTEXTEND PRINT
+                    -(.\main.lst) OBJECT(..\OUT\main.obj)
+
+line level    source
+
+   1          /**********************************************
+   2          *  CPU:STC12W1K16S
+   3          *  ¾§Õñ:11.0592MHZ
+   4          ------------------------------------------------*/
+   5          
+   6          #define  MAIN_GLOBAL
+   7          #include "include.h"
+   8          volatile unsigned short timerc;
+   9          volatile OS_SYS sys;
+  10          
+  11          ///////////////////////////////È«¾Ö±äÁ¿/////////////////////////////////////
+  12          unsigned char code change_data[16] ={0,0,0,0,0,0,0x08,0x77,0x8F,0x69,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};//ÐÞ¸Ä
+             -ÃÜÂëÒªÐ´
+  13          unsigned char code af_change_data[16] ={7,7,7,7,7,7,0x08,0x77,0x8F,0x69,8,8,8,8,8,8};//ÒªÐÞ¸ÄµÄÃÜÂë
+  14          //FF 07  80 69ÃÜÂëA¿ÉÓÃÃÜÂëB²»¿ÉÓÃ
+  15          //08 77 8F 69 ÓÃÃÜÂëA¶Á£¬ÓÃÃÜÂëB¶ÁÐ´
+  16          //ÃÜÂëA£ºÓÉBÐ´²»¿É¶Á BÍ¬Ñù 
+  17          unsigned char code rc_data[16] ={0x12,0x34,0x56,0x78,0xED,0xCB,0xA9,0x87,0x12,0x34,0x56,0x78,0x01,0xFE,0x0
+             -1,0xFE};//
+  18          //M1¿¨µÄÄ³Ò»¿éÐ´ÎªÈçÏÂ¸ñÊ½£¬Ôò¸Ã¿éÎªÇ®°ü£¬¿É½ÓÊÕ¿Û¿îºÍ³äÖµÃüÁî
+  19          //4×Ö½Ú½ð¶î£¨µÍ×Ö½ÚÔÚÇ°£©£«4×Ö½Ú½ð¶îÈ¡·´£«4×Ö½Ú½ð¶î£«1×Ö½Ú¿éµØÖ·£«1×Ö½Ú¿éµØÖ·È¡·´£«1×Ö½Ú¿éµØÖ·£«1×Ö½Ú¿éµØÖ
+             -·È¡·´ 
+  20          unsigned char code DefaultKey[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; //Ô­Ê¼ÃÜÂë
+  21          unsigned char code DefaultKeyA[6] = {7,7,7,7,7,7}; //ÃÜÂëA
+  22          unsigned char code DefaultKeyB[6] = {8,8,8,8,8,8}; //ÃÜÂëB
+  23          //volatile UINT8   digital_led_refresh = OFF;
+  24                                                                          //ÆäÊý¾Ý¶¼»¹Ã»±»²É¼¯ÉÏÈ¥£¬ÔòÀ¶É«ÉÁË¸£©£»
+  25          volatile UINT8 led_flash_NO =LED_RED;                                   //µÆ×é¿ØÖÆ
+  26          volatile UINT16 led_flash_period=1000;                                  //ÉÁË¸ÖÜÆÚ¿ØÖÆ
+  27          volatile UINT8 led_flash_mode =LED_FLASH_MODE_1V1;              //ÁÁÃðÊ±¼ä±ÈÀý¿ØÖÆ:0³£ÁÁ
+  28          volatile UINT8 led_flash_status = 0;                                    //ÉÁË¸¿ØÖÆµÆÊ±£¬µÆµ±Ç°µÄ×´Ì¬,0¡ª¡ªÃð£»1¡ª¡ªÁÁ
+  29          volatile UINT8 led_flash_NO_BK =LED_RED;                                //µÆ×é¿ØÖÆ±¸·ÝÊý¾Ý(À­½ø¶ÈÌõºóÊ¹ÓÃ)
+  30          
+  31          //Î´Íê³ÉÈÎÎñ¿é
+  32          volatile UINT8 beSettingAddr = 0;                                               //0:·ÇÉèÖÃÕ¾Ö·          1:ÉèÖÃÕ¾Ö·              2£ºÕ¾Ö·Éè¶¨ÒÑ¾­°´ÏÂOK¼ü
+  33          volatile UINT8 toSettedAddr[3];                                                 //´ýÉè¶¨µØÖ·Öµ
+  34          
+  35          volatile UINT8 SystemLocked = OFF;                                              //Ëø¶¨ÏµÍ³¡¢½âËøÏµÍ³
+  36                   
+  37          ///////////////////////////////È«¾Ö±äÁ¿-END-////////////////////////////////
+  38           
+  39          ////////////////////////////////////////////////////////////////////////////////
+  40          // ¹¦ÄÜÃèÊö : main program
+  41          // ÊäÈë²ÎÊý : 
+  42          // ·µ»Ø²ÎÊý : 
+  43          // ËµÃ÷     :  
+  44          ////////////////////////////////////////////////////////////////////////////////
+  45          int main(void) 
+  46          {   
+  47   1              DelayMs(20);    //µÈ´ýµçÔ´ÎÈ¶¨        
+  48   1      
+  49   1              EA = 0;
+  50   1              IO_Init();
+  51   1              InitT0();
+C51 COMPILER V9.00   MAIN                                                                  07/20/2016 15:45:35 PAGE 2   
+
+  52   1      
+  53   1              LoadParaInEeprom();
+  54   1              baudrate   = BD_9600;
+  55   1      
+  56   1              UART485_Init(); //¹Ì¶¨Ê¹ÓÃ38400²¨ÌØÂÊ
+  57   1              M485_CTRL_OFF;       
+  58   1              PcdReset();
+  59   1          PcdAntennaOff(); 
+  60   1          PcdAntennaOn(); 
+  61   1              Start_Init();
+  62   1              EA = 1;//Ê¹ÄÜÖÐ¶Ï       
+  63   1              RC_WorkeMode=RC_ReadMode;                               
+  64   1              while(1)
+  65   1              {       
+  66   2      
+  67   2                  if(RC_WorkeMode==RC_WriteMode)//Ð´Ä£Ê½      /**************RFID¿¨¶ÁÐ´¿ØÖÆ***********************/
+  68   2                         M1_WriteDate(PICC_AUTHENT1A,8,rc_data,DefaultKey); //Ð´IC¿¨
+  69   2                      else if(RC_WorkeMode==RC_ReadMode)//¶ÁÄ£Ê½
+  70   2                         M1_Read(PICC_AUTHENT1A ,7,16,DefaultKey);//É¨Ãè¶ÁIC¿¨
+  71   2                      else if(RC_WorkeMode==RC_ChangeMode)//¶ÁÄ£Ê½//¸ÄÃÜÂë
+  72   2                          M1_ChangeKey(3);
+  73   2      
+  74   2                      CMD_led_flash();            /**************RGB¿ØÖÆ***********************/
+  75   2      
+  76   2                      CMD_LigheTower_flash(); /********************µÆËþ¿ØÖÆ****************/
+  77   2      
+  78   2                      Scan_Keyboard();            /*************°´¼ü´¦Àí(ÓÐ°´¼üÊ±)*************/
+  79   2                      if (keyStatus != CMD_KEY_NULL) 
+  80   2                      {
+  81   3                              Process_Keyboard();
+  82   3                      }
+  83   2      
+  84   2                      if (uart.rFlag == ON)   /*************´¦Àí485Í¨Ñ¶********************/
+  85   2                      {
+  86   3                              //Send485SeriaDate((UINT8 *)uart.rBuffer, uart.rIndex);         //´®¿Ú´òÓ¡½ÓÊÕµ½µÄÊý¾Ý
+  87   3                              Cmd_Process();
+  88   3                              uart.rFlag   = OFF;
+  89   3                              uart.rIndex  = 0;
+  90   3                      }
+  91   2              }                 
+  92   1      }
+  93          //////////////////////////////////////////////////////////////////////////////////
+  94          //// ¹¦ÄÜÃèÊö : ¶¨Ê±Æ÷ÖÐ¶ÏÈë¿Ú
+  95          //// ÊäÈë²ÎÊý : 
+  96          //// ·µ»Ø²ÎÊý : 
+  97          //// ËµÃ÷     :  
+  98          //////////////////////////////////////////////////////////////////////////////////
+  99          void timer0_int (void) interrupt 1
+ 100          { 
+ 101   1              TH0  = TH0_INIT;
+ 102   1          TL0  = TL0_INIT;
+ 103   1              if(con_flag==ON)
+ 104   1              {
+ 105   2                      if(rc_blink_read>0)       //¶Á¿¨»òÕßÐ´¿¨³É¹¦ºóÖ¸Ê¾µÆÁÁ
+ 106   2                      {
+ 107   3                              rc_blink_read--;
+ 108   3                              led_on();
+ 109   3                              BEEP_ON;
+ 110   3                      }
+ 111   2                      else
+ 112   2                      {
+ 113   3                              led_off();
+C51 COMPILER V9.00   MAIN                                                                  07/20/2016 15:45:35 PAGE 3   
+
+ 114   3                              BEEP_OFF;
+ 115   3                      }
+ 116   2              }
+ 117   1      
+ 118   1          //´®¿Ú1-485»º³åÇøÓÐÊý¾Ý
+ 119   1          if (uart.rIndex != 0)                               
+ 120   1          {
+ 121   2              if (uart.rTimer-- == 0) 
+ 122   2              {
+ 123   3                              uart.rFlag  = ON;
+ 124   3                      }
+ 125   2          }
+ 126   1         
+ 127   1          //µÝ¼õ¼ÆËãÆ÷£¬×Ô¼õ1
+ 128   1          if (sys.led_flash_count != 0)
+ 129   1              sys.led_flash_count--;
+ 130   1      
+ 131   1      }
+ 132          /*******************************************************************************
+ 133                                                                          END                                     
+ 134          *******************************************************************************/
+ 135          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    318    ----
+   CONSTANT SIZE    =     66    ----
+   XDATA SIZE       =     33    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

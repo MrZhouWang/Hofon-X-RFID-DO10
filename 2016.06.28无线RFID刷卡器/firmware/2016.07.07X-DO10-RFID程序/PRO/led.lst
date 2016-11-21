@@ -1,0 +1,891 @@
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN ..\OUT\led.obj
+COMPILER INVOKED BY: C:\Program Files\kile\C51\BIN\C51.EXE ..\SRC\led.c LARGE OMF2 BROWSE INCDIR(..\SRC;..\INC;..\PRO) D
+                    -EBUG PRINT(.\led.lst) TABS(2) OBJECT(..\OUT\led.obj)
+
+line level    source
+
+   1          #include "include.h"
+   2          
+   3          LIGHTTOWER_CTL LightTowerCtl[6];
+   4          
+   5          UINT8 address[3];
+   6          UINT8 baudrate;
+   7          UINT8 ucAddr[3];                        //备份地址
+   8          UINT8 ucBaud;                           //备份波特率
+   9          
+  10          UINT8 FinishedLED = LED_NONE;     //拣货完成后，清零前，指示灯亮的颜色
+  11          UINT8 WtTime = 5;           //一对多应用时，进度条等待时间
+  12          UINT8 FnDefine = 0;           //Fn功能键定义  0-零拣货  1-满箱
+  13          UINT8 DispMode = 0;           //显示模式  0-任务模式  1-区域信息模式
+  14          
+  15          
+  16          ///////////////////////////////////////////////////////////////////////////////
+  17          UINT8 ucShift;                  //LED数码管当前显示位置"1==>6"
+  18          volatile OS_NUM idata  led[LED_NUMBER]; //运行时的数据
+  19          volatile OS_NUM idata bled[LED_NUMBER];   
+  20          
+  21          #define DISPLAY_OFF     0xff
+  22          //UINT8 LED_TBL[LED_TBL_MAX] =          //数码管显示对应表
+  23          //{     
+  24          //    //0      1    2      3    4     5     6     7      
+  25          //    0xc0, 0xf9, 0xa4, 0xb0, 0x99, 0x92, 0x82, 0xf8,
+  26          //    //8      9    A      b    C     d     E     F
+  27          //    0x80, 0x90, 0x88, 0x83, 0xc6, 0xa1, 0x86, 0x8e,
+  28          //    //g      H    i      j    k     L     m     n      
+  29          //    0XFF, 0x8B, 0XFF, 0xF1, 0XFF, 0xc7, 0XFF, 0xab,
+  30          //    //o      P    q      r    s     t     U     v      
+  31          //    0xa3, 0x8c, 0XFF, 0XFF, 0x92, 0x87, 0xc1, 0xe3,
+  32          //    //w      x    y      z    -        
+  33          //    0XFF, 0x89, 0XFF, 0XFF, 0xBF
+  34          //
+  35          //};
+  36          
+  37          //尽量按ASCII码来作表 ，LED是共阳极的，A=b0,B=b1,C=b2,D=b3,E=b4,F=b5,G=b6,H=b7,
+  38          UINT8    LED_TBL[LED_TBL_MAX] = {
+  39          /*---------------------------------------------------------------------*/
+  40          //数码管显示0-9的七段码字节
+  41          //0-15，0--9,A-f
+  42          //0   1    2    3    4     5    6    7    8    9  a  b    c    d    e    f   
+  43          0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0x88,0x83,0xc6,0xa1,0x86,0x8e,
+  44          //16-31，0.--9.,A.-f.
+  45          //0.   1.   2.   3.   4.   5.   6.   7.   8.   9.   a.   b.   c.   d.   e.   f.
+  46          //0x40,0x79,0x24,0x30,0x19,0x12,0x02,0x78,0x00,0x10,0x08,0x03,0x46,0x21,0x06,0x0e,  
+  47          //g    H    i   j    k     L   m    n  //o   P    q     r    s    t    U    v     
+  48          0XFF,0x8B,0XFF,0xF1,0XFF,0xc7,0XFF,0xab,0xa3,0x8c,0XFF,0XFF,0x92,0x87,0xc1,0xe3,
+  49          //32-47                                                   +       -
+  50          //0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x8f,0xff,0xbf,0xff,0xff,
+  51          //w   x    y    z //36 G亮  f亮  a亮 b亮  c亮  d亮  e亮    +   G亮  -  h亮
+  52          0XFF,0x89,0XFF,0XFF,  0xBF,0xdf,0xfe,0xfd,0xfb,0xf7,0xef,0x8f,0xbf,0xbf,0x7f,0xff,
+  53          //48--63
+  54          //0   1    2    3    4     5    6    7    8    9  //0.   1.   2.   3.   4.   5.//:    ;    <    =    >    
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 2   
+
+             -?  
+  55          0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0x40,0x79,0x24,0x30,0x19,0x12,//0xff,0xff,0xff,0xff,0xff
+             -,0xff,
+  56          //64
+  57          //@
+  58          0xff, 
+  59          //65--90  
+  60          //A   B    C    D    E     F    G    H    I    J    K    L    M    N
+  61          0x88,0x83,0xc6,0xa1,0x86,0x8e,0xc2,0x89,0xf9,0xe1,0xbf,0xc7,0x8f,0xab,
+  62          //O   P    Q    R    S     T    U    V    W    X    Y    Z  
+  63          0xa3,0x8c,0x98,0xaf,0x92,0x87,0xc1,0xe3,0x9c,0xff,0x91,0xa4,
+  64          //91--96  '['==turn on; ']'==turn off;
+  65          //[   \    ]    ^    _     .
+  66          //0x00,0xff,0xff,0xff,0xfd,0xff,
+  67          //           6.   7.   8.   9.
+  68          0x00,0xff,  0x02,0x78,0x00,0x10,
+  69          //97-122
+  70          //a   b    c    d    e     f    g    h    i    j    k    l    m    n
+  71          0x88,0x83,0xa7,0xa1,0x86,0x8e,0xc2,0x89,0xfb,0xe1,0xbf,0xc7,0x8f,0xab,
+  72          //o   p    q    r    s     t    u    v    w    x    y    z
+  73          0xa3,0x8c,0x98,0xaf,0x92,0x87,0xc1,0xe3,0x9c,0xff,0x91,0xa4,
+  74          //123-127
+  75          0xBF,0xBF,0xBF,0xBF,0xBF,
+  76          };
+  77          
+  78          /*******************************************************************************
+  79                                LED数码管SPI控制IO初始化
+  80              Input :  None
+  81              Output:  None 
+  82          *******************************************************************************/
+  83          void digital_led_cntrl_Init(void)
+  84          { 
+  85   1        OE_SET;     //DISABLE
+  86   1        SH_CLK_CLR;
+  87   1        ST_CLK_CLR;
+  88   1        OE_CLR;     //ENALBE
+  89   1        
+  90   1        ucShift = 0;
+  91   1      }
+  92          /*******************************************************************************
+  93                                LED数码管 根据位置开通对应数码管
+  94              Input :  None
+  95              Output:  None 
+  96          *******************************************************************************/
+  97          void led_SupplyPower(void)
+  98          {
+  99   1        UINT8 led_pwr_no;              
+ 100   1      
+ 101   1        led_pwr_no = ucShift;
+ 102   1      
+ 103   1        if(led_pwr_no == DIGITAL_LED1)//百位数码管电源
+ 104   1        {
+ 105   2      //    LED_PORT_OUT =  0x1f;                               //LED 1-LED5 ==> OFF
+ 106   2          digital_led1_port = DIGITAL_LED_PWR_ON;        
+ 107   2          digital_led2_port = DIGITAL_LED_PWR_OFF; 
+ 108   2          digital_led3_port = DIGITAL_LED_PWR_OFF; 
+ 109   2        }
+ 110   1        else if(led_pwr_no == DIGITAL_LED2)//十位数码管电源
+ 111   1        {
+ 112   2      //    LED_PORT_OUT =  0x1f;                               //LED 1-LED5 ==> OFF
+ 113   2          digital_led1_port = DIGITAL_LED_PWR_OFF;
+ 114   2          digital_led2_port = DIGITAL_LED_PWR_ON; 
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 3   
+
+ 115   2          digital_led3_port = DIGITAL_LED_PWR_OFF; 
+ 116   2        }
+ 117   1        else if(led_pwr_no == DIGITAL_LED3)//个位数码管电源
+ 118   1        {
+ 119   2      //    LED_PORT_OUT =  0x1f;                               //LED 1-LED5 ==> OFF
+ 120   2          digital_led1_port = DIGITAL_LED_PWR_OFF;
+ 121   2          digital_led2_port = DIGITAL_LED_PWR_OFF; 
+ 122   2          digital_led3_port = DIGITAL_LED_PWR_ON; 
+ 123   2        }
+ 124   1      }
+ 125          
+ 126          /*******************************************************************************
+ 127                                显示当前扫描的led内容          
+ 128              Input :  UINT8 ucValue   //当前要显示的数值
+ 129              Output:  None 
+ 130          *******************************************************************************/
+ 131          void led_Show(UINT8 ucValue)
+ 132          {
+ 133   1        UINT8 i;
+ 134   1      
+ 135   1        ST_CLK_CLR;
+ 136   1        for (i=0; i<8; i++)
+ 137   1        {
+ 138   2          if (ucValue & 0x80)
+ 139   2            SDATA_SET;
+ 140   2          else
+ 141   2            SDATA_CLR;
+ 142   2          SH_CLK_CLR;
+ 143   2          NOP;
+ 144   2          SH_CLK_SET;
+ 145   2          ucValue = ucValue << 1; 
+ 146   2        }
+ 147   1        
+ 148   1        ST_CLK_SET;
+ 149   1        led_SupplyPower();                  //供电
+ 150   1      }
+ 151          
+ 152          /*******************************************************************************
+ 153                                显示一个digital led         
+ 154              Input :           None
+ 155              Output:         None
+ 156              Description:  显示一个数码管数字，扫描时间: 72us         
+ 157          *******************************************************************************/
+ 158          
+ 159          void led_Scan(void)
+ 160          {
+ 161   1          UINT8 ucValue;
+ 162   1      
+ 163   1          if (sys.led_scan_flag == OFF) return;
+ 164   1          sys.led_scan_flag = OFF;
+ 165   1      
+ 166   1        //非配置状态(显示数值状态)下，并且当前不是修改数值下，则先控制当前刷新的位数，数值位，高位0不显示
+ 167   1          if (led[ucShift].show == ON)
+ 168   1          {
+ 169   2              if(led[ucShift].num >= LED_TBL_MAX )
+ 170   2              {
+ 171   3                  led[ucShift].num = LED_TBL_MAX -1;
+ 172   3              }
+ 173   2              ucValue = LED_TBL[led[ucShift].num];     //查表   ......
+ 174   2          }
+ 175   1          else
+ 176   1          {
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 4   
+
+ 177   2              ucValue = DISPLAY_OFF;                                      //关闭显示
+ 178   2          }
+ 179   1          led_Show(ucValue);                        //显示
+ 180   1      
+ 181   1          ucShift++;
+ 182   1          if (ucShift >= LED_NUMBER) 
+ 183   1          {
+ 184   2            ucShift = 0; 
+ 185   2          }
+ 186   1      }
+ 187          
+ 188          //获取灯亮时间，单位ms
+ 189          UINT16 GetLedOnTime()
+ 190          {
+ 191   1        UINT16 unRet = led_flash_period;
+ 192   1        switch(led_flash_mode)
+ 193   1        {
+ 194   2        case 0:           //常亮模式，不会调用此函数
+ 195   2          break;      
+ 196   2        case 1:
+ 197   2          unRet = led_flash_period/2;
+ 198   2          break;
+ 199   2        case 2:
+ 200   2          unRet = led_flash_period/3;
+ 201   2          break;
+ 202   2        case 3:
+ 203   2          unRet = led_flash_period/6;
+ 204   2          break;
+ 205   2        case 4:
+ 206   2          unRet = led_flash_period/11;
+ 207   2          break;
+ 208   2        case 5:
+ 209   2          unRet = led_flash_period/3*2;
+ 210   2          break;
+ 211   2        case 6:
+ 212   2          unRet = led_flash_period/6*5;
+ 213   2          break;
+ 214   2        case 7:
+ 215   2          unRet = led_flash_period/11*10;
+ 216   2          break;
+ 217   2        default:
+ 218   2          break;
+ 219   2        }
+ 220   1        return unRet;
+ 221   1      }
+ 222          //获取灯灭时间，单位ms
+ 223          UINT16 GetLedOffTime()
+ 224          {
+ 225   1        UINT16 unRet = led_flash_period;
+ 226   1        switch(led_flash_mode)
+ 227   1        {
+ 228   2        case 0:            //常亮模式，不会调用此函数
+ 229   2          break;        
+ 230   2        case 1:
+ 231   2          unRet = led_flash_period/2;
+ 232   2          break;
+ 233   2        case 5:
+ 234   2          unRet = led_flash_period/3;
+ 235   2          break;
+ 236   2        case 6:
+ 237   2          unRet = led_flash_period/6;
+ 238   2          break;
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 5   
+
+ 239   2        case 7:
+ 240   2          unRet = led_flash_period/11;
+ 241   2          break;
+ 242   2        case 2:
+ 243   2          unRet = led_flash_period/3*2;
+ 244   2          break;
+ 245   2        case 3:
+ 246   2          unRet = led_flash_period/6*5;
+ 247   2          break;
+ 248   2        case 4:
+ 249   2          unRet = led_flash_period/11*10;
+ 250   2          break;
+ 251   2        default:
+ 252   2          break;
+ 253   2        }
+ 254   1        return unRet;
+ 255   1      }
+ 256          //获取灯亮时间，单位ms
+ 257          UINT16 GetLightTowerOnTime(int LightTowIndex)
+ 258          {
+ 259   1        UINT16 unRet = LightTowerCtl[LightTowIndex].led_flash_period;
+ 260   1        switch(LightTowerCtl[LightTowIndex].led_switch_ratio)
+ 261   1        {
+ 262   2        case 0X00:  
+ 263   2          break;        //常亮模式，不会调用此函数
+ 264   2        case 0X01: 
+ 265   2            unRet = LightTowerCtl[LightTowIndex].led_flash_period/2;
+ 266   2            break;
+ 267   2        case 0X02:  
+ 268   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3;
+ 269   2            break;
+ 270   2        case 0X03:
+ 271   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6;  
+ 272   2            break;
+ 273   2        case 0X04:  
+ 274   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11;
+ 275   2          break;
+ 276   2        case 0X05:
+ 277   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3*2;
+ 278   2          break;
+ 279   2        case 0X06:
+ 280   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6*5;
+ 281   2          break;
+ 282   2        case 0X07:
+ 283   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11*10;
+ 284   2          break;
+ 285   2        default:
+ 286   2          break;
+ 287   2        }
+ 288   1        return unRet;
+ 289   1      }
+ 290          //获取灯灭时间，单位ms
+ 291          UINT16 GetLightTowerOffTime(int LightTowIndex)
+ 292          {
+ 293   1        UINT16 unRet = LightTowerCtl[LightTowIndex].led_flash_period;
+ 294   1        switch(LightTowerCtl[LightTowIndex].led_switch_ratio)
+ 295   1        {
+ 296   2        case 0X00:                    //常亮模式，不会调用此函数
+ 297   2          break;      
+ 298   2        case 0X01:
+ 299   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/2;
+ 300   2          break;
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 6   
+
+ 301   2        case 0X05:
+ 302   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3;
+ 303   2          break;
+ 304   2        case 0X06:
+ 305   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6;
+ 306   2          break;
+ 307   2        case 0X07:
+ 308   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11;
+ 309   2          break;
+ 310   2        case 0X02:
+ 311   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/3*2;
+ 312   2          break;
+ 313   2        case 0X03:
+ 314   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/6*5;
+ 315   2          break;
+ 316   2        case 0X04:
+ 317   2          unRet = LightTowerCtl[LightTowIndex].led_flash_period/11*10;
+ 318   2          break;
+ 319   2        default:
+ 320   2          break;
+ 321   2        }
+ 322   1        return unRet;
+ 323   1      }
+ 324          void CMD_led_flash(void)
+ 325          {
+ 326   1        if(uart232.rFlag == ON)
+ 327   1        {
+ 328   2      //    led_light_ctrl(LED_RED, OFF);
+ 329   2      //    led_light_ctrl(LED_GREEN, ON);
+ 330   2      //    led_light_ctrl(LED_BLUE, OFF);
+ 331   2          led_light_ctrl(LED_GREEN);      // 仅点亮绿色
+ 332   2          return;
+ 333   2        }
+ 334   1          //LED指示灯控制
+ 335   1      //    if(led_flash_NO == LED_RED || led_flash_NO == LED_GREEN || led_flash_NO == LED_BLUE)//当前为亮
+ 336   1        if(led_flash_NO != LED_NONE)
+ 337   1          {
+ 338   2      //    switch(led_flash_NO)
+ 339   2      //    {
+ 340   2      //    case LED_RED:   led_light_ctrl(LED_GREEN, OFF);   led_light_ctrl(LED_BLUE, OFF);    break;
+ 341   2      //    case LED_GREEN:   led_light_ctrl(LED_RED, OFF);   led_light_ctrl(LED_BLUE, OFF);    break;
+ 342   2      //    case LED_BLUE:    led_light_ctrl(LED_GREEN, OFF);   led_light_ctrl(LED_RED, OFF);   break;
+ 343   2      //    }
+ 344   2          if(led_flash_mode == LED_FLASH_MODE_ALWAYS) //常亮显示
+ 345   2          {
+ 346   3      //      led_light_ctrl(led_flash_NO, ON);
+ 347   3            led_light_ctrl(led_flash_NO);     // 仅点亮对应颜色
+ 348   3          }
+ 349   2          else//闪烁显示
+ 350   2          {
+ 351   3            //当前灯为灭状态
+ 352   3            if(led_flash_status == 0)
+ 353   3            {
+ 354   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 355   4              if(sys.led_flash_count == 0)
+ 356   4              {
+ 357   5      //          led_light_ctrl(led_flash_NO, ON);
+ 358   5                led_light_ctrl(led_flash_NO);     // 仅点亮对应颜色
+ 359   5                led_flash_status = 1; //切换到灯亮状态
+ 360   5                sys.led_flash_count = GetLedOnTime();
+ 361   5              }
+ 362   4            }
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 7   
+
+ 363   3            //当前为亮灯
+ 364   3            else
+ 365   3            {
+ 366   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 367   4              if(sys.led_flash_count == 0)
+ 368   4              {
+ 369   5      //          led_light_ctrl(led_flash_NO, OFF);
+ 370   5                led_light_ctrl(LED_NONE);
+ 371   5                led_flash_status = 0; //切换到灯亮状态
+ 372   5                sys.led_flash_count = GetLedOffTime();
+ 373   5              }
+ 374   4            }
+ 375   3          }
+ 376   2        }
+ 377   1        else//当前不显示
+ 378   1        {
+ 379   2      //        led_light_ctrl(LED_RED, OFF);
+ 380   2      //        led_light_ctrl(LED_GREEN, OFF);
+ 381   2      //        led_light_ctrl(LED_BLUE, OFF);
+ 382   2          led_light_ctrl(LED_NONE); 
+ 383   2        }
+ 384   1      }
+ 385          
+ 386          void CMD_LigheTower_flash(void)
+ 387          {
+ 388   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 389   1        //LED1
+ 390   1        if(LightTowerCtl[0].led_status == ON)
+ 391   1        {
+ 392   2          //常亮
+ 393   2          if(LightTowerCtl[0].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 394   2          {
+ 395   3                CNTRL1_ON;
+ 396   3            LED_CNTRL1_ON;
+ 397   3          }
+ 398   2          //闪烁
+ 399   2          else
+ 400   2          { 
+ 401   3            //当前灯为灭状态
+ 402   3            if(LightTowerCtl[0].led_status_cur == OFF)
+ 403   3            {
+ 404   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 405   4              if(LightTowerCtl[0].led_flash_count == 0)
+ 406   4              {
+ 407   5                    CNTRL1_ON;
+ 408   5                LED_CNTRL1_ON;
+ 409   5      
+ 410   5                LightTowerCtl[0].led_status_cur = ON;
+ 411   5                LightTowerCtl[0].led_flash_count = GetLightTowerOnTime(0);
+ 412   5              }
+ 413   4            }
+ 414   3            //当前为亮灯
+ 415   3            else
+ 416   3            {
+ 417   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 418   4              if(LightTowerCtl[0].led_flash_count == 0)
+ 419   4              {
+ 420   5                    CNTRL1_OFF;
+ 421   5                LED_CNTRL1_OFF;
+ 422   5      
+ 423   5                LightTowerCtl[0].led_status_cur = OFF;
+ 424   5                LightTowerCtl[0].led_flash_count = GetLightTowerOffTime(0);
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 8   
+
+ 425   5              }
+ 426   4            }
+ 427   3          }
+ 428   2        }
+ 429   1        else
+ 430   1        {
+ 431   2              CNTRL1_OFF;
+ 432   2          LED_CNTRL1_OFF;
+ 433   2        }
+ 434   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 435   1        //LED2
+ 436   1        if(LightTowerCtl[1].led_status == ON)
+ 437   1        {
+ 438   2          //常亮
+ 439   2          if(LightTowerCtl[1].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 440   2          {
+ 441   3                CNTRL2_ON;
+ 442   3            LED_CNTRL2_ON;
+ 443   3          }
+ 444   2          //闪烁
+ 445   2          else
+ 446   2          { 
+ 447   3            //当前灯为灭状态
+ 448   3            if(LightTowerCtl[1].led_status_cur == OFF)
+ 449   3            {
+ 450   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 451   4              if(LightTowerCtl[1].led_flash_count == 0)
+ 452   4              {
+ 453   5                    CNTRL2_ON;
+ 454   5                LED_CNTRL2_ON;
+ 455   5      
+ 456   5                LightTowerCtl[1].led_status_cur = ON;
+ 457   5                LightTowerCtl[1].led_flash_count = GetLightTowerOnTime(1);
+ 458   5              }
+ 459   4            }
+ 460   3            //当前为亮灯
+ 461   3            else
+ 462   3            {
+ 463   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 464   4              if(LightTowerCtl[1].led_flash_count == 0)
+ 465   4              {
+ 466   5                    CNTRL2_OFF;
+ 467   5                LED_CNTRL2_OFF;
+ 468   5      
+ 469   5                LightTowerCtl[1].led_status_cur = OFF;
+ 470   5                LightTowerCtl[1].led_flash_count = GetLightTowerOffTime(1);
+ 471   5              }
+ 472   4            }
+ 473   3          }
+ 474   2        }
+ 475   1        else
+ 476   1        {
+ 477   2              CNTRL2_OFF;
+ 478   2          LED_CNTRL2_OFF;
+ 479   2        }
+ 480   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 481   1        //LED3
+ 482   1        if(LightTowerCtl[2].led_status == ON)
+ 483   1        {
+ 484   2          //常亮
+ 485   2          if(LightTowerCtl[2].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 486   2          {
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 9   
+
+ 487   3                CNTRL3_ON;
+ 488   3            LED_CNTRL3_ON;
+ 489   3          }
+ 490   2          //闪烁
+ 491   2          else
+ 492   2          { 
+ 493   3            //当前灯为灭状态
+ 494   3            if(LightTowerCtl[2].led_status_cur == OFF)
+ 495   3            {
+ 496   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 497   4              if(LightTowerCtl[2].led_flash_count == 0)
+ 498   4              {
+ 499   5                    CNTRL3_ON;
+ 500   5                LED_CNTRL3_ON;
+ 501   5      
+ 502   5                LightTowerCtl[2].led_status_cur = ON;
+ 503   5                LightTowerCtl[2].led_flash_count = GetLightTowerOnTime(2);
+ 504   5              }
+ 505   4            }
+ 506   3            //当前为亮灯
+ 507   3            else
+ 508   3            {
+ 509   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 510   4              if(LightTowerCtl[2].led_flash_count == 0)
+ 511   4              {
+ 512   5                    CNTRL3_OFF;
+ 513   5                LED_CNTRL3_OFF;
+ 514   5      
+ 515   5                LightTowerCtl[2].led_status_cur = OFF;
+ 516   5                LightTowerCtl[2].led_flash_count = GetLightTowerOffTime(2);
+ 517   5              }
+ 518   4            }
+ 519   3          }
+ 520   2        }
+ 521   1        else
+ 522   1        {
+ 523   2              CNTRL3_OFF;
+ 524   2          LED_CNTRL3_OFF;
+ 525   2        }
+ 526   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 527   1        //LED4
+ 528   1        if(LightTowerCtl[3].led_status == ON)
+ 529   1        {
+ 530   2          //常亮
+ 531   2          if(LightTowerCtl[3].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 532   2          {
+ 533   3                CNTRL4_ON;
+ 534   3            LED_CNTRL4_ON;
+ 535   3          }
+ 536   2          //闪烁
+ 537   2          else
+ 538   2          { 
+ 539   3            //当前灯为灭状态
+ 540   3            if(LightTowerCtl[3].led_status_cur == OFF)
+ 541   3            {
+ 542   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 543   4              if(LightTowerCtl[3].led_flash_count == 0)
+ 544   4              {
+ 545   5                    CNTRL4_ON;
+ 546   5                LED_CNTRL4_ON;
+ 547   5      
+ 548   5                LightTowerCtl[3].led_status_cur = ON;
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 10  
+
+ 549   5                LightTowerCtl[3].led_flash_count = GetLightTowerOnTime(3);
+ 550   5              }
+ 551   4            }
+ 552   3            //当前为亮灯
+ 553   3            else
+ 554   3            {
+ 555   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 556   4              if(LightTowerCtl[3].led_flash_count == 0)
+ 557   4              {
+ 558   5                    CNTRL4_OFF;
+ 559   5                LED_CNTRL4_OFF;
+ 560   5      
+ 561   5                LightTowerCtl[3].led_status_cur = OFF;
+ 562   5                LightTowerCtl[3].led_flash_count = GetLightTowerOffTime(3);
+ 563   5              }
+ 564   4            }
+ 565   3          }
+ 566   2        }
+ 567   1        else
+ 568   1        {
+ 569   2              CNTRL4_OFF;
+ 570   2          LED_CNTRL4_OFF;
+ 571   2        }
+ 572   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 573   1        //LED5
+ 574   1        if(LightTowerCtl[4].led_status == ON)
+ 575   1        {
+ 576   2          //常亮
+ 577   2          if(LightTowerCtl[4].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 578   2          {
+ 579   3                CNTRL5_ON;
+ 580   3            LED_CNTRL5_ON;
+ 581   3          }
+ 582   2          //闪烁
+ 583   2          else
+ 584   2          { 
+ 585   3            //当前灯为灭状态
+ 586   3            if(LightTowerCtl[4].led_status_cur == OFF)
+ 587   3            {
+ 588   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 589   4              if(LightTowerCtl[4].led_flash_count == 0)
+ 590   4              {
+ 591   5                    CNTRL5_ON;
+ 592   5                LED_CNTRL5_ON;
+ 593   5      
+ 594   5                LightTowerCtl[4].led_status_cur = ON;
+ 595   5                LightTowerCtl[4].led_flash_count = GetLightTowerOnTime(4);
+ 596   5              }
+ 597   4            }
+ 598   3            //当前为亮灯
+ 599   3            else
+ 600   3            {
+ 601   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 602   4              if(LightTowerCtl[4].led_flash_count == 0)
+ 603   4              {
+ 604   5                    CNTRL5_OFF;
+ 605   5                LED_CNTRL5_OFF;
+ 606   5      
+ 607   5                LightTowerCtl[4].led_status_cur = OFF;
+ 608   5                LightTowerCtl[4].led_flash_count = GetLightTowerOffTime(4);
+ 609   5              }
+ 610   4            }
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 11  
+
+ 611   3          }
+ 612   2        }
+ 613   1        else
+ 614   1        {
+ 615   2              CNTRL5_OFF;
+ 616   2          LED_CNTRL5_OFF;
+ 617   2        }
+ 618   1        ///////////////////////////////////////////////////////////////////////////////////////////////
+ 619   1        //LED6
+ 620   1        if(LightTowerCtl[5].led_status == ON)
+ 621   1        {
+ 622   2          //常亮
+ 623   2          if(LightTowerCtl[5].led_switch_ratio == LED_FLASH_MODE_ALWAYS)
+ 624   2          {
+ 625   3                CNTRL6_ON;
+ 626   3            LED_CNTRL6_ON;
+ 627   3          }
+ 628   2          //闪烁
+ 629   2          else
+ 630   2          { 
+ 631   3            //当前灯为灭状态
+ 632   3            if(LightTowerCtl[5].led_status_cur == OFF)
+ 633   3            {
+ 634   4              //灯灭计数器到，切换到灯亮状态，并且设置改变灯亮周期参数
+ 635   4              if(LightTowerCtl[5].led_flash_count == 0)
+ 636   4              {
+ 637   5                    CNTRL6_ON;
+ 638   5                LED_CNTRL6_ON;
+ 639   5      
+ 640   5                LightTowerCtl[5].led_status_cur = ON;
+ 641   5                LightTowerCtl[5].led_flash_count = GetLightTowerOnTime(5);
+ 642   5              }
+ 643   4            }
+ 644   3            //当前为亮灯
+ 645   3            else
+ 646   3            {
+ 647   4              //灯灭计数器到，切换到灯灭状态，并且设置改变灯灭周期参数
+ 648   4              if(LightTowerCtl[5].led_flash_count == 0)
+ 649   4              {
+ 650   5                    CNTRL6_OFF;
+ 651   5                LED_CNTRL6_OFF;
+ 652   5      
+ 653   5                LightTowerCtl[5].led_status_cur = OFF;
+ 654   5                LightTowerCtl[5].led_flash_count = GetLightTowerOffTime(5);
+ 655   5              }
+ 656   4            }
+ 657   3          }
+ 658   2        }
+ 659   1        else
+ 660   1        {
+ 661   2              CNTRL6_OFF;
+ 662   2          LED_CNTRL6_OFF;
+ 663   2        }
+ 664   1      }
+ 665          /*******************************************************************************
+ 666                                给当前显示led供电            
+ 667              Input :  UINT8 ucValue   //LED_RED, LED_GREEN, LED_BLUE 
+ 668                       UINT8 ucStatus  //ON or OFF
+ 669              Output:  None 
+ 670          *******************************************************************************/
+ 671          //void led_light_ctrl(UINT8 ucValue, UINT8 ucStatus)
+ 672          //{
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 12  
+
+ 673          //  switch (ucValue)
+ 674          //  {
+ 675          //    case LED_RED:
+ 676          //      if (ucStatus == ON)
+ 677          //        LED_R_ON;
+ 678          //      else
+ 679          //        LED_R_OFF;
+ 680          //      break;
+ 681          //    
+ 682          //    case LED_GREEN:
+ 683          //      if (ucStatus == ON)
+ 684          //        LED_G_ON;
+ 685          //      else
+ 686          //        LED_G_OFF;
+ 687          //      break;
+ 688          //    
+ 689          //    case LED_BLUE:
+ 690          //      if (ucStatus == ON)
+ 691          //        LED_B_ON;
+ 692          //      else
+ 693          //        LED_B_OFF;
+ 694          //      break;
+ 695          //      
+ 696          //    default:
+ 697          //      break;
+ 698          //  }
+ 699          //}
+ 700          /*******************************************************************************
+ 701                                给当前显示led供电            
+ 702              Input :  UINT8 ucValue   //LED_RED, LED_GREEN, LED_BLUE 
+ 703              Output:  None 
+ 704          *******************************************************************************/
+ 705          void led_light_ctrl(UINT8 ucValue)
+ 706          {
+ 707   1        switch (ucValue)
+ 708   1        {
+ 709   2          case LED_RED:     LED_G_OFF; LED_B_OFF;  LED_R_ON;  break;    
+ 710   2          case LED_GREEN:   LED_R_OFF; LED_B_OFF;  LED_G_ON;  break;
+ 711   2          case LED_BLUE:    LED_R_OFF; LED_G_OFF;  LED_B_ON;  break;
+ 712   2          
+ 713   2          case LED_RG:      LED_B_OFF; LED_R_ON;   LED_G_ON;  break;    
+ 714   2          case LED_RB:    LED_G_OFF; LED_R_ON;   LED_B_ON;  break;
+ 715   2          case LED_GB:    LED_R_OFF; LED_G_ON;   LED_B_ON;  break;
+ 716   2          case LED_RGB:   LED_R_ON;  LED_G_ON;   LED_B_ON;  break;      
+ 717   2          default:      LED_R_OFF; LED_G_OFF; LED_B_OFF;break;
+ 718   2        }
+ 719   1      }
+ 720          
+ 721          
+ 722          //清除命令(地址清除时、广播清除时、显示清除时)
+ 723          void Display_Clear(void)
+ 724          {
+ 725   1        //显示信息清除
+ 726   1        UINT8 i;
+ 727   1        DispInfoCur.SRCodeLen = 0;
+ 728   1        for (i=0; i<LED_NUMBER; i++)
+ 729   1        {
+ 730   2          led[i].num = 0;
+ 731   2          led[i].show = OFF;
+ 732   2        }
+ 733   1        //指示灯清除
+ 734   1        led_flash_NO = LED_NONE;
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 13  
+
+ 735   1        //蜂鸣器清除
+ 736   1      }
+ 737          
+ 738          
+ 739          ////////////////////////////////////////////////////////////////////////////////
+ 740          // 功能描述 : 数码管显示控制
+ 741          // 输入参数 : 
+ 742          // 返回参数 : 
+ 743          // 说明     :  
+ 744          ////////////////////////////////////////////////////////////////////////////////
+ 745          void digital_led_disp(void)
+ 746          {
+ 747   1        SINT16 i=0,j=0;
+ 748   1        //控制显示
+ 749   1        for(i = 0; i < LED_NUMBER; i++)
+ 750   1        {
+ 751   2          led[i].show = OFF;
+ 752   2        }
+ 753   1        //如果232口有扫描数据,则显示扫描进来的数据
+ 754   1        if(uart232.rFlag == ON)
+ 755   1        {
+ 756   2          j = LED_NUMBER-1;
+ 757   2          for(i = uart232.rIndex-1; i>= 0 && j>=0; i--)
+ 758   2          {
+ 759   3            if(uart232.rBuffer[i] >= '0' && uart232.rBuffer[i] <= '9')
+ 760   3            {
+ 761   4              led[j].num = uart232.rBuffer[i]-'0';
+ 762   4              led[j].show = ON;
+ 763   4            }
+ 764   3            else if(uart232.rBuffer[i] >= 'A' && uart232.rBuffer[i] <= 'Z')
+ 765   3            {
+ 766   4              led[j].num = uart232.rBuffer[i]-'A'+10;
+ 767   4              led[j].show = ON;
+ 768   4            }
+ 769   3            else if(uart232.rBuffer[i] >= 'a' && uart232.rBuffer[i] <= 'z')
+ 770   3            {
+ 771   4              led[j].num = uart232.rBuffer[i]-'a'+10;
+ 772   4              led[j].show = ON;
+ 773   4            }
+ 774   3            else if(uart232.rBuffer[i] == '-')
+ 775   3            {
+ 776   4              led[j].num = LED_TBL_MAX-1;
+ 777   4              led[j].show = ON;
+ 778   4            }
+ 779   3            if(uart232.rBuffer[i] != '\r' && uart232.rBuffer[i] !='\n')
+ 780   3              j--;
+ 781   3          }
+ 782   2        }
+ 783   1        //否则,如果有显示信息,则显示信息
+ 784   1        else if(DispInfoCur.SRCodeLen > 0)
+ 785   1        {
+ 786   2          j = LED_NUMBER-1;
+ 787   2          for(i = DispInfoCur.SRCodeLen-1; i>=0 && j>=0; i--)
+ 788   2          {
+ 789   3            if(DispInfoCur.SRCode[i] >= '0' && DispInfoCur.SRCode[i] <= '9')
+ 790   3            {
+ 791   4              led[j].num = DispInfoCur.SRCode[i]-'0';
+ 792   4              led[j].show = ON;
+ 793   4            }
+ 794   3            else if(DispInfoCur.SRCode[i] >= 'A' && DispInfoCur.SRCode[i] <= 'Z')
+ 795   3            {
+ 796   4              led[j].num = DispInfoCur.SRCode[i]-'A'+10;
+C51 COMPILER V9.52.0.0   LED                                                               08/18/2016 09:16:05 PAGE 14  
+
+ 797   4              led[j].show = ON;
+ 798   4            }
+ 799   3            else if(DispInfoCur.SRCode[i] >= 'a' && DispInfoCur.SRCode[i] <= 'z')
+ 800   3            {
+ 801   4              led[j].num = DispInfoCur.SRCode[i]-'a'+10;
+ 802   4              led[j].show = ON;
+ 803   4            }
+ 804   3            else if(DispInfoCur.SRCode[i] == '-')
+ 805   3            {
+ 806   4              led[j].num = LED_TBL_MAX-1;
+ 807   4              led[j].show = ON;
+ 808   4            }
+ 809   3            if(uart232.rBuffer[i] != '\r' && uart232.rBuffer[i] !='\n')
+ 810   3              j--;
+ 811   3          }
+ 812   2        }  
+ 813   1      }
+ 814          /*******************************************************************************
+ 815                      开机自检测程序
+ 816              input:   none     
+ 817              output:  none
+ 818          *******************************************************************************/ 
+ 819          void digital_led_dispaddr()
+ 820          {
+ 821   1          //加载地址
+ 822   1          led[0].num = toSettedAddr[0];          
+ 823   1          led[1].num = toSettedAddr[1];
+ 824   1          led[2].num = toSettedAddr[2];
+ 825   1      
+ 826   1          led[0].show = ON;
+ 827   1          led[1].show = ON;
+ 828   1          led[2].show = ON;         
+ 829   1      }
+ 830          
+ 831          
+ 832          /*******************************************************************************
+ 833                          END         
+ 834          *******************************************************************************/
+ 835          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2650    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    183       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =     12    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
